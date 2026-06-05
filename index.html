@@ -20,11 +20,11 @@
         
         /* 画面右端のブラウザ全体のスクロールバー（スライダー）を完全に非表示にする設定 */
         html, body {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         /* ツイートエリア内部のスクロールバーも非表示に */
@@ -56,7 +56,7 @@
         
         <header class="flex flex-col gap-3 max-w-2xl">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20 w-fit">
-                　　　　　　
+                      
             </div>
             <h1 class="text-3xl md:text-4xl font-black tracking-tight text-zinc-800 dark:text-white leading-tight">
                 skotm
@@ -210,21 +210,22 @@
                     GitHub ↗
                 </a>
             </div>
+            <p class="text-[10px] font-mono text-zinc-400/70 dark:text-zinc-500/60 tracking-wider mt-0.5 select-none">
+                Visits: <span id="visitor-count" class="font-bold text-zinc-500 dark:text-zinc-400">----</span>
+            </p>
         </footer>
 
     </main>
 
     <script>
-        // 存在するツイートファイルを探す最大範囲（x1〜x20まで探す設定）
-        const SCAN_MAX_TWEETS = 50; 
-        
-        // 表示したい最新ツイートの件数（例：最新の3件を表示）
+        // 存在するツイートファイルを探す最大範囲（x1〜x50まで探す設定）
+        const SCAN_MAX_TWEETS = 50;
+        // 表示したい最新ツイートの件数（例：最新の10件を表示）
         const DISPLAY_TWEET_COUNT = 10;
 
         function toggleTheme() {
             const html = document.documentElement;
             html.classList.toggle('dark');
-            
             const isDark = html.classList.contains('dark');
             document.getElementById('icon-moon').style.display = isDark ? 'block' : 'none';
             document.getElementById('icon-sun').style.display = isDark ? 'none' : 'block';
@@ -251,7 +252,6 @@
             
             const isDark = document.documentElement.classList.contains('dark');
             const validTweets = [];
-
             // 1. まず存在するツイートファイルを全て確認して取得する
             for (let i = 1; i <= SCAN_MAX_TWEETS; i++) {
                 try {
@@ -261,7 +261,7 @@
                         validTweets.push({ id: i, html: html });
                     }
                 } catch (e) {
-                    // エラー（ファイルがない等）はスキップ
+                    // エラーはスキップ
                 }
             }
 
@@ -273,10 +273,8 @@
 
             // 2. 取得したツイートを番号が大きい順（最新順）に並び替える
             validTweets.sort((a, b) => b.id - a.id);
-
             // 3. 設定した件数だけ切り出して表示する
             const tweetsToDisplay = validTweets.slice(0, DISPLAY_TWEET_COUNT);
-
             tweetsToDisplay.forEach(tweet => {
                 const themeAttr = isDark ? 'data-theme="dark"' : 'data-theme="light"';
                 let modifiedHtml = tweet.html.replace('<blockquote class="twitter-tweet"', `<blockquote class="twitter-tweet" ${themeAttr} data-dnt="true" data-conversation="none" data-width="100%"`);
@@ -286,7 +284,6 @@
                 tweetWrapper.innerHTML = modifiedHtml;
                 container.appendChild(tweetWrapper);
             });
-
             // 4. Twitterのウィジェットスクリプトを読み込み、表示を反映させる
             if (window.twttr && window.twttr.widgets) {
                 window.twttr.widgets.load(container);
@@ -299,9 +296,28 @@
             }
         }
 
+        // 💡 訪問者数をカウントして取得する関数を追加
+        async function loadVisitorCount() {
+            const container = document.getElementById('visitor-count');
+            try {
+                // 事前登録不要で、このURLにリクエストを送信するだけで自動的にカウンターが作成・+1されます
+                // プロジェクト名(skotm-portfolio)は他の人と被らないように独自のものに設定しています
+                const response = await fetch('https://api.counterapi.dev/v1/projects/skotm-portfolio/counters/visits/up');
+                if (!response.ok) throw new Error('Counter API error');
+                const data = await response.json();
+                
+                // 3桁カンマ区切り (例: 1,234) でテキストを反映
+                container.textContent = data.value.toLocaleString();
+            } catch (e) {
+                console.error(e);
+                container.textContent = '---';
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             loadMarkdown();
             loadTweets();
+            loadVisitorCount(); // 💡 画面ロード時に実行
         });
     </script>
 </body>
