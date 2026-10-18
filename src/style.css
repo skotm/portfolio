@@ -768,3 +768,96 @@ a, button, .filters button, .down, .about-link {
   .project .project-category { margin-bottom: 9px; }
   .project > p:not(.project-category) { margin-bottom: 14px; }
 }
+
+
+/* Make the repository README usable in landscape and short-height windows */
+@media (orientation: landscape) and (max-height: 600px), (max-height: 520px) {
+  .details-backdrop {
+    align-items: stretch;
+    padding: 8px 16px;
+  }
+  .details-dialog {
+    width: min(1000px, 100%);
+    max-height: calc(100dvh - 16px);
+    min-height: 0;
+    border-radius: 14px;
+  }
+  .details-header {
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+  }
+  .details-header .eyebrow {
+    font-size: 9px;
+  }
+  .details-header h2 {
+    margin: 2px 0;
+    font-size: clamp(18px, 3vw, 24px);
+    line-height: 1.2;
+  }
+  .details-header p {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .details-close {
+    width: 32px;
+    height: 32px;
+    font-size: 21px;
+  }
+  .details-description {
+    flex: 0 0 auto;
+    padding: 9px 20px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .readme-heading {
+    flex: 0 0 auto;
+    padding: 9px 20px;
+  }
+  .readme-heading h3 {
+    font-size: 14px;
+  }
+  .readme-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 14px 20px 18px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .readme-content {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .readme-content h1 { font-size: 24px; }
+  .readme-content h2 { margin-top: 16px; font-size: 19px; }
+  .readme-content h3 { margin-top: 15px; font-size: 16px; }
+  .details-footer {
+    flex: 0 0 auto;
+    padding: 8px 20px;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 900px) {
+  .details-backdrop {
+    padding: 5px 12px;
+  }
+  .details-dialog {
+    max-height: calc(100dvh - 10px);
+    border-radius: 12px;
+  }
+  .details-header {
+    padding: 7px 16px;
+  }
+  .details-description {
+    padding: 7px 16px;
+  }
+  .readme-heading {
+    padding: 7px 16px;
+  }
+  .readme-panel {
+    padding: 10px 16px 14px;
+  }
+  .details-footer {
+    padding: 6px 16px;
+  }
+}
