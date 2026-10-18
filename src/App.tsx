@@ -141,10 +141,6 @@ function ProjectDetails({ project, onClose }: { project: Project; onClose: () =>
           {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
           {!loading && !error && readme && <ReadmeContent html={readme} />}
         </div>
-        <div className="details-footer">
-          <span>READMEはGitHubから取得しています</span>
-          <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer">リポジトリを開く <span>↗</span></a>
-        </div>
       </section>
     </div>
   );
