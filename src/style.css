@@ -1006,3 +1006,75 @@ a, button, .filters button, .down, .about-link {
   .details-backdrop { padding-top: 5px; padding-bottom: 5px; }
   .details-dialog { max-height: calc(100dvh - 10px); }
 }
+
+
+/* Project titles and category tags overlaid on preview images */
+.project-image-link {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 18px;
+  background: #e9e7e2;
+}
+.project-image-link .project-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 180px;
+  object-fit: cover;
+  transition: transform .45s cubic-bezier(.2,.7,.2,1);
+}
+.project-image-link:hover .project-image { transform: scale(1.035); }
+.project-image-shade {
+  position: absolute;
+  inset: 25% 0 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 0%, rgba(12, 13, 18, .15) 28%, rgba(12, 13, 18, .78) 100%);
+  pointer-events: none;
+}
+.project-image-caption {
+  position: absolute;
+  z-index: 2;
+  right: 18px;
+  bottom: 17px;
+  left: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  color: #fff;
+  pointer-events: none;
+}
+.project-image-title {
+  font-size: clamp(19px, 2vw, 27px);
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  text-shadow: 0 1px 12px rgba(0,0,0,.18);
+  overflow-wrap: anywhere;
+}
+.project-image-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.project-image-tags span {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 5px 9px;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 999px;
+  background: rgba(20, 22, 28, .3);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+@media (max-width: 600px) {
+  .project-image-link { border-radius: 16px; }
+  .project-image-link .project-image { min-height: 165px; }
+  .project-image-caption { right: 14px; bottom: 14px; left: 14px; gap: 7px; }
+  .project-image-title { font-size: clamp(18px, 5vw, 24px); }
+  .project-image-tags { gap: 5px; }
+  .project-image-tags span { padding: 4px 7px; font-size: 9px; }
+}
