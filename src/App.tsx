@@ -1,11 +1,26 @@
-const projects = [
+import { useEffect, useState } from 'react';
+
+type Project = {
+  name: string;
+  category: string;
+  description: string;
+  status: string;
+  image?: string;
+  url: string;
+  owner: string;
+  repo: string;
+};
+
+const projects: Project[] = [
   {
     name: 'MeteoQuake',
     category: '地震・気象・防災',
     description: '地震・気象・防災情報を扱うアプリケーション。',
     status: '開発中',
-    image: 'https://github-production-user-asset-6210df.s3.amazonaws.com/260800475/623613404-c5297fdd-1c50-4b18-bb80-b0be32356a59.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261018%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261018T073002Z&X-Amz-Expires=300&X-Amz-Signature=a1ac69e210c365110862dc4a9e0e3968909bc331ed1d8677401b16af938292c0&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng',
+    image: 'https://github-production-user-asset-6210df.s3.amazonaws.com/260800475/623613404-c5297fdd-1c50-4b18-bb80-b0be32356a59.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261018%2Fs3%2Faws4_request&X-Amz-Date=20261018T073002Z&X-Amz-Expires=300&X-Amz-Signature=a1ac69e210c365110862dc4a9e0e3968909bc331ed1d8677401b16af938292c0&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng',
     url: 'https://github.com/skotm/MeteoQuake',
+    owner: 'skotm',
+    repo: 'MeteoQuake',
   },
   {
     name: 'MeteoQuake-KyoshinViewer',
@@ -14,6 +29,8 @@ const projects = [
     status: '',
     image: 'https://github.com/user-attachments/assets/6f18089b-818d-495b-9cc3-c3103e849489',
     url: 'https://github.com/skotm/MeteoQuake-KyoshinViewer',
+    owner: 'skotm',
+    repo: 'MeteoQuake-KyoshinViewer',
   },
   {
     name: 'WIS Viewer',
@@ -21,6 +38,8 @@ const projects = [
     description: '気象庁の公開データを使い、気温・降水量・風・台風・警報・雨雲レーダーなどを地図上に表示するツール。',
     status: '',
     url: 'https://github.com/skotm/wis-viewer',
+    owner: 'skotm',
+    repo: 'wis-viewer',
   },
   {
     name: 'EQS Viewer',
@@ -28,6 +47,8 @@ const projects = [
     description: '地震情報や観測データをリアルタイムで表示するWebアプリケーション。',
     status: '',
     url: 'https://github.com/skotm/eqs-viewer',
+    owner: 'skotm',
+    repo: 'eqs-viewer',
   },
   {
     name: 'EQS',
@@ -35,10 +56,99 @@ const projects = [
     description: '仮想地震の発生から揺れの伝播までを再現するシミュレーションツール。',
     status: '',
     url: 'https://github.com/skotm/eqs',
+    owner: 'skotm',
+    repo: 'eqs',
   },
 ];
 
+function ReadmeContent({ markdown }: { markdown: string }) {
+  return (
+    <div className="readme-content">
+      {markdown.split(/\r?\n/).map((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return <div className="readme-spacer" key={index} />;
+        if (trimmed.startsWith('### ')) return <h4 key={index}>{trimmed.slice(4)}</h4>;
+        if (trimmed.startsWith('## ')) return <h3 key={index}>{trimmed.slice(3)}</h3>;
+        if (trimmed.startsWith('# ')) return <h2 key={index}>{trimmed.slice(2)}</h2>;
+        if (/^[-*] /.test(trimmed)) return <p className="readme-list-item" key={index}>• {trimmed.slice(2)}</p>;
+        if (/^\d+\. /.test(trimmed)) return <p className="readme-list-item" key={index}>{trimmed}</p>;
+        if (trimmed.startsWith('> ')) return <blockquote key={index}>{trimmed.slice(2)}</blockquote>;
+        if (trimmed.startsWith('```')) return <p className="readme-code-label" key={index}>コードブロック</p>;
+        return <p key={index}>{line.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\`(.*?)\`/g, '$1')}</p>;
+      })}
+    </div>
+  );
+}
+
+function ProjectDetails({ project, onClose }: { project: Project; onClose: () => void }) {
+  const [readme, setReadme] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoading(true);
+    setError('');
+    setReadme('');
+    fetch(`https://api.github.com/repos/${project.owner}/${project.repo}/readme`, {
+      headers: { Accept: 'application/vnd.github.raw+json' },
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(response.status === 404 ? 'このリポジトリにはREADMEが見つかりませんでした。' : 'READMEを取得できませんでした。時間をおいて再度お試しください。');
+        const text = await response.text();
+        setReadme(text);
+      })
+      .catch((err: unknown) => {
+        if (err instanceof Error && err.name !== 'AbortError') setError(err.message || 'READMEの取得に失敗しました。');
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [project.owner, project.repo]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
+  return (
+    <div className="details-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+      <section className="details-dialog" role="dialog" aria-modal="true" aria-labelledby="details-title">
+        <div className="details-header">
+          <div>
+            <span className="eyebrow">REPOSITORY DETAILS</span>
+            <h2 id="details-title">{project.name}</h2>
+            <p>{project.category}</p>
+          </div>
+          <button className="details-close" onClick={onClose} aria-label="詳細を閉じる">×</button>
+        </div>
+        <p className="details-description">{project.description}</p>
+        <div className="readme-heading">
+          <h3>README</h3>
+          <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubで開く ↗</a>
+        </div>
+        <div className="readme-panel">
+          {loading && <p className="readme-state">READMEを読み込み中…</p>}
+          {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
+          {!loading && !error && readme && <ReadmeContent markdown={readme} />}
+        </div>
+        <div className="details-footer">
+          <span>READMEはGitHubから取得しています</span>
+          <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer">リポジトリを開く <span>↗</span></a>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export default function App() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   return (
     <div className="shell" id="top">
       <header className="nav">
@@ -59,7 +169,6 @@ export default function App() {
           <h1>skotm</h1>
           <div className="hero-bottom">
             <p>気象・地震・防災情報の可視化ツールを開発しています。<br />主に JavaScript を用いて、リアルタイムデータの取得・解析・地図上への可視化を行っています。</p>
-            <a className="down" href="#projects" aria-label="プロジェクト一覧へ">↓</a>
           </div>
         </section>
 
@@ -85,10 +194,10 @@ export default function App() {
                 <h3>{project.name}</h3>
                 <p className="project-category">{project.category}</p>
                 <p>{project.description}</p>
-                <div className="project-foot">
+                <div className="project-actions">
+                  <button className="details-button" onClick={() => setSelectedProject(project)}>詳細 <span>↗</span></button>
                   <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
-                    <span>GitHub repository</span>
-                    <span aria-hidden="true">↗</span>
+                    <span>GitHub repository</span><span aria-hidden="true">↗</span>
                   </a>
                 </div>
               </article>
@@ -116,6 +225,7 @@ export default function App() {
         <a className="logo" href="#top">skotm</a>
         <a href="#top">ページ上部へ ↑</a>
       </footer>
+      {selectedProject && <ProjectDetails project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </div>
   );
 }
