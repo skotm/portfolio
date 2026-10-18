@@ -142,6 +142,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
   return (
     <div className="documentation-page">
       <header className="documentation-header">
+        <button className="documentation-back" type="button" onClick={() => window.dispatchEvent(new CustomEvent('portfolio:back-to-home'))}>← トップページに戻る</button>
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -168,8 +169,13 @@ export default function App() {
       const project = projects.find((item) => item.name === name);
       if (project) setSelectedProject(project);
     };
+    const onBackToHome = () => setSelectedProject(null);
     window.addEventListener('portfolio:select-project', onSelectProject);
-    return () => window.removeEventListener('portfolio:select-project', onSelectProject);
+    window.addEventListener('portfolio:back-to-home', onBackToHome);
+    return () => {
+      window.removeEventListener('portfolio:select-project', onSelectProject);
+      window.removeEventListener('portfolio:back-to-home', onBackToHome);
+    };
   }, []);
 
   return (
