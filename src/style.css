@@ -1625,3 +1625,47 @@ a, button, .filters button, .down, .about-link {
     overflow: auto;
   }
 }
+
+
+/* Final responsive rule: hide README navigation in portrait, show it in landscape */
+@media (orientation: portrait) {
+  .readme-layout { display: block !important; overflow: auto; }
+  .readme-sidebar { display: none !important; }
+  .readme-panel { display: block; width: 100%; height: auto; overflow: auto; }
+  .readme-mobile-toc,
+  .readme-sidebar-backdrop,
+  .readme-sidebar-close { display: none !important; }
+}
+@media (orientation: landscape) {
+  .readme-layout {
+    display: grid !important;
+    grid-template-columns: minmax(190px, 245px) minmax(0, 1fr);
+    min-height: 0;
+    overflow: hidden;
+  }
+  .readme-sidebar {
+    display: flex !important;
+    position: relative !important;
+    inset: auto !important;
+    width: auto !important;
+    height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    transform: none !important;
+    visibility: visible !important;
+    overflow: hidden;
+  }
+  .readme-toc { display: block; flex: 1 1 auto; min-height: 0; overflow-y: auto; }
+  .readme-panel { display: block; min-width: 0; min-height: 0; height: 100%; overflow: auto; }
+  .readme-mobile-toc,
+  .readme-sidebar-backdrop,
+  .readme-sidebar-close { display: none !important; }
+}
+@media (orientation: landscape) and (max-width: 760px) {
+  .readme-layout { grid-template-columns: minmax(145px, 38%) minmax(0, 1fr); }
+  .readme-sidebar-project { padding: 10px; }
+  .readme-sidebar-project strong { font-size: 12px; }
+  .readme-sidebar-project p { font-size: 10px; }
+  .readme-sidebar-tags span { font-size: 9px; }
+  .readme-sidebar-footer { display: none; }
+}
