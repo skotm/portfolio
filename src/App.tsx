@@ -124,10 +124,14 @@ function ProjectDetails({ project, onClose }: { project: Project; onClose: () =>
     <div className="details-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
       <section className="details-dialog" role="dialog" aria-modal="true" aria-labelledby="details-title">
         <div className="details-header">
-          <div>
+          <div className="details-title-group">
             <span className="eyebrow">REPOSITORY DETAILS</span>
             <h2 id="details-title">{project.name}</h2>
             <p>{project.category}</p>
+          </div>
+          <div className="details-header-extra">
+            <p className="details-header-description">{project.description}</p>
+            <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubで開く ↗</a>
           </div>
           <button className="details-close" onClick={onClose} aria-label="詳細を閉じる">×</button>
         </div>
