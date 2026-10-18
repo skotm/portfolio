@@ -317,3 +317,16 @@ a, button, .filters button, .down, .about-link {
     transition: none;
   }
 }
+
+
+/* Show full project screenshots without cropping */
+.project-image-link {
+  aspect-ratio: 16 / 9;
+  background: #fff;
+}
+.project-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
