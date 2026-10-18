@@ -17,7 +17,7 @@ const projects: Project[] = [
     category: '地震・気象・防災',
     description: '地震・気象・防災情報を扱うアプリケーション。',
     status: '開発中',
-    image: 'https://github-production-user-asset-6210df.s3.amazonaws.com/260800475/623613404-c5297fdd-1c50-4b18-bb80-b0be32356a59.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20261018%2Fs3%2Faws4_request&X-Amz-Date=20261018T073002Z&X-Amz-Expires=300&X-Amz-Signature=a1ac69e210c365110862dc4a9e0e3968909bc331ed1d8677401b16af938292c0&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng',
+    image: 'https://opengraph.githubassets.com/1/skotm/MeteoQuake',
     url: 'https://github.com/skotm/MeteoQuake',
     owner: 'skotm',
     repo: 'MeteoQuake',
@@ -61,25 +61,28 @@ const projects: Project[] = [
   },
 ];
 
-function ReadmeContent({ markdown }: { markdown: string }) {
-  return (
-    <div className="readme-content">
-      {markdown.split(/\r?\n/).map((line, index) => {
-        const trimmed = line.trim();
-        if (!trimmed) return <div className="readme-spacer" key={index} />;
-        if (trimmed.startsWith('### ')) return <h4 key={index}>{trimmed.slice(4)}</h4>;
-        if (trimmed.startsWith('## ')) return <h3 key={index}>{trimmed.slice(3)}</h3>;
-        if (trimmed.startsWith('# ')) return <h2 key={index}>{trimmed.slice(2)}</h2>;
-        if (/^[-*] /.test(trimmed)) return <p className="readme-list-item" key={index}>• {trimmed.slice(2)}</p>;
-        if (/^\d+\. /.test(trimmed)) return <p className="readme-list-item" key={index}>{trimmed}</p>;
-        if (trimmed.startsWith('> ')) return <blockquote key={index}>{trimmed.slice(2)}</blockquote>;
-        if (trimmed.startsWith('```')) return <p className="readme-code-label" key={index}>コードブロック</p>;
-        return <p key={index}>{line.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\`(.*?)\`/g, '$1')}</p>;
-      })}
-    </div>
-  );
+function sanitizeReadmeHtml(html: string): string {
+  const document = new DOMParser().parseFromString(html, 'text/html');
+  document.querySelectorAll('script, style, iframe, object, embed, form, input, button').forEach((node) => node.remove());
+  document.body.querySelectorAll('*').forEach((element) => {
+    Array.from(element.attributes).forEach((attribute) => {
+      const name = attribute.name.toLowerCase();
+      if (name.startsWith('on') || name === 'srcdoc') element.removeAttribute(attribute.name);
+      if (name === 'href' || name === 'src') {
+        try {
+          const parsed = new URL(attribute.value, window.location.origin);
+          if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') element.removeAttribute(attribute.name);
+          else if (name === 'href') { element.setAttribute('target', '_blank'); element.setAttribute('rel', 'noreferrer'); }
+        } catch { element.removeAttribute(attribute.name); }
+      }
+    });
+  });
+  return document.body.innerHTML;
 }
 
+function ReadmeContent({ html }: { html: string }) {
+  return <div className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html) }} />;
+}
 function ProjectDetails({ project, onClose }: { project: Project; onClose: () => void }) {
   const [readme, setReadme] = useState('');
   const [loading, setLoading] = useState(true);
@@ -91,13 +94,13 @@ function ProjectDetails({ project, onClose }: { project: Project; onClose: () =>
     setError('');
     setReadme('');
     fetch(`https://api.github.com/repos/${project.owner}/${project.repo}/readme`, {
-      headers: { Accept: 'application/vnd.github.raw+json' },
+      headers: { Accept: 'application/vnd.github.html+json' },
       signal: controller.signal,
     })
       .then(async (response) => {
         if (!response.ok) throw new Error(response.status === 404 ? 'このリポジトリにはREADMEが見つかりませんでした。' : 'READMEを取得できませんでした。時間をおいて再度お試しください。');
-        const text = await response.text();
-        setReadme(text);
+        const html = await response.text();
+        setReadme(html);
       })
       .catch((err: unknown) => {
         if (err instanceof Error && err.name !== 'AbortError') setError(err.message || 'READMEの取得に失敗しました。');
@@ -135,7 +138,7 @@ function ProjectDetails({ project, onClose }: { project: Project; onClose: () =>
         <div className="readme-panel">
           {loading && <p className="readme-state">READMEを読み込み中…</p>}
           {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
-          {!loading && !error && readme && <ReadmeContent markdown={readme} />}
+          {!loading && !error && readme && <ReadmeContent html={readme} />}
         </div>
         <div className="details-footer">
           <span>READMEはGitHubから取得しています</span>
@@ -188,7 +191,7 @@ export default function App() {
                 </div>
                 {project.image && (
                   <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のプレビュー'}>
-                    <img className="project-image" src={project.image} alt={project.name + ' のスクリーンショット'} loading="lazy" />
+                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading="lazy" onError={(event) => { const image = event.currentTarget; if (project.name === 'MeteoQuake' && !image.dataset.fallback) { image.dataset.fallback = 'true'; image.src = 'https://github.com/skotm/MeteoQuake/raw/HEAD/README.md'; } else { image.style.display = 'none'; } }} />
                   </a>
                 )}
                 <h3>{project.name}</h3>
