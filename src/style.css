@@ -1204,3 +1204,34 @@ a, button, .filters button, .down, .about-link {
 .project-actions {
   margin-top: 0;
 }
+
+
+/* White outlined, rounded GitHub repository buttons */
+.project-actions .repo-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 38px;
+  padding: 7px 15px;
+  border: 1px solid #dedede;
+  border-radius: 999px;
+  background: #fff;
+  color: #202020;
+  text-decoration: none;
+  transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+}
+.project-actions .repo-pill:hover {
+  border-color: #aaa;
+  background: #f8f8f8;
+  color: #111;
+}
+.project-actions .repo-pill span {
+  color: inherit;
+}
+@media (max-width: 600px) {
+  .project-actions .repo-pill {
+    min-height: 35px;
+    padding: 6px 13px;
+  }
+}
