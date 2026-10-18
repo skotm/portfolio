@@ -861,3 +861,53 @@ a, button, .filters button, .down, .about-link {
     padding: 6px 16px;
   }
 }
+
+
+/* In landscape, place project description and GitHub link beside the title */
+.details-header-extra { display: none; }
+@media (orientation: landscape) and (max-height: 600px) {
+  .details-header {
+    display: grid;
+    grid-template-columns: minmax(170px, 1fr) minmax(220px, 1.2fr) auto;
+    align-items: center;
+    column-gap: 22px;
+  }
+  .details-title-group { min-width: 0; }
+  .details-header-extra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-width: 0;
+  }
+  .details-header-extra .details-header-description {
+    margin: 0;
+    color: #555;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .details-header-extra a {
+    flex: 0 0 auto;
+    font-size: 12px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    white-space: nowrap;
+  }
+  .details-description,
+  .readme-heading > a {
+    display: none;
+  }
+  .readme-heading {
+    justify-content: flex-start;
+  }
+}
+@media (orientation: landscape) and (max-height: 600px) and (max-width: 650px) {
+  .details-header {
+    grid-template-columns: minmax(130px, .85fr) minmax(0, 1.15fr) auto;
+    column-gap: 12px;
+  }
+  .details-header-extra { gap: 9px; }
+  .details-header-extra .details-header-description { font-size: 10px; }
+  .details-header-extra a { font-size: 10px; }
+  .details-header h2 { overflow-wrap: anywhere; }
+}
