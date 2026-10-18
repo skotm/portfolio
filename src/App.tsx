@@ -193,7 +193,7 @@ export default function App() {
             {projects.map((project, index) => (
               <article className="project" key={project.name}>
                 <div className="project-meta">
-                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  {!project.image && <span>{String(index + 1).padStart(2, '0')}</span>}
                   {!project.image && project.status && <span>{project.status}</span>}
                 </div>
                 {project.image && (
