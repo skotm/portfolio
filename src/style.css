@@ -707,3 +707,25 @@ a, button, .filters button, .down, .about-link {
   width: 17px;
   height: 17px;
 }
+
+
+/* Icon-only links in the About section */
+.about-socials .about-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
+}
+.about-socials .about-icon-link svg {
+  display: block;
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+}
+.about-socials .about-icon-link.x-icon svg {
+  width: 19px;
+  height: 19px;
+}
