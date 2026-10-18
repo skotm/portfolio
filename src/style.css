@@ -1456,3 +1456,63 @@ a, button, .filters button, .down, .about-link {
   .readme-panel { width: 100%; }
   .readme-sidebar-footer { max-height: 42%; }
 }
+
+
+/* Keep the README sidebar visible on mobile; its active section updates while scrolling */
+@media (max-width: 760px) {
+  .readme-mobile-toc,
+  .readme-sidebar-backdrop,
+  .readme-sidebar-close {
+    display: none !important;
+  }
+  .readme-layout {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .readme-sidebar {
+    position: relative;
+    inset: auto;
+    z-index: auto;
+    width: 100%;
+    max-width: none;
+    flex: 0 0 auto;
+    max-height: 42vh;
+    border-right: 0;
+    border-bottom: 1px solid var(--line, #e7e7e7);
+    box-shadow: none;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+  .readme-sidebar-project {
+    padding: 12px 14px 10px;
+  }
+  .readme-sidebar-project strong { margin-top: 4px; }
+  .readme-sidebar-project p { margin-top: 4px; }
+  .readme-sidebar-tags { margin-top: 7px; }
+  .readme-toc {
+    flex: 0 1 auto;
+    min-height: 56px;
+    max-height: 145px;
+    padding: 10px 8px;
+  }
+  .readme-toc .readme-sidebar-label { padding-bottom: 6px; }
+  .readme-toc-link { padding-top: 6px; padding-bottom: 6px; }
+  .readme-sidebar-footer {
+    flex: 0 0 auto;
+    max-height: 110px;
+    padding: 8px;
+  }
+  .readme-sidebar-footer > .readme-projects-label,
+  .readme-sidebar-footer > button {
+    display: none;
+  }
+  .readme-sidebar-footer > .readme-sidebar-label { display: none; }
+  .readme-panel {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    padding: 16px;
+  }
+}
