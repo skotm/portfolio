@@ -614,9 +614,13 @@ a, button, .filters button, .down, .about-link {
 .profile-cover::after {
   background: linear-gradient(
     to bottom,
-    rgb(255 255 255 / 0%) 35%,
-    rgb(255 255 255 / 8%) 50%,
-    rgb(245 243 238 / 58%) 73%,
+    rgb(245 243 238 / 0%) 20%,
+    rgb(245 243 238 / 5%) 38%,
+    rgb(245 243 238 / 14%) 52%,
+    rgb(245 243 238 / 30%) 66%,
+    rgb(245 243 238 / 52%) 78%,
+    rgb(245 243 238 / 74%) 88%,
+    rgb(245 243 238 / 90%) 95%,
     #f5f3ee 100%
   );
 }
@@ -633,4 +637,19 @@ a, button, .filters button, .down, .about-link {
     margin-top: 16px;
     margin-bottom: 26px;
   }
+}
+
+
+/* Extend the fade beyond the image edge to avoid a visible horizontal seam */
+.hero {
+  background: linear-gradient(
+    to bottom,
+    #f5f3ee 0%,
+    #f5f3ee 78%,
+    #f5f3ee 100%
+  );
+}
+.profile-cover {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 44%, rgb(0 0 0 / 82%) 62%, rgb(0 0 0 / 48%) 78%, rgb(0 0 0 / 18%) 91%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 44%, rgb(0 0 0 / 82%) 62%, rgb(0 0 0 / 48%) 78%, rgb(0 0 0 / 18%) 91%, transparent 100%);
 }
