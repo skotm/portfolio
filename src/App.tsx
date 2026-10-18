@@ -169,6 +169,9 @@ export default function App() {
 
       <main>
         <section className="hero">
+          <div className="profile-cover" aria-hidden="true">
+            <img src="/portfolio/sakura.jpg" alt="" fetchPriority="high" />
+          </div>
           <p className="eyebrow">PROFILE</p>
           <h1>skotm</h1>
           <div className="hero-bottom">
