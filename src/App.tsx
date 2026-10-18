@@ -90,14 +90,15 @@ function ProjectDetails({ project, headings, setHeadings, activeHeading, setActi
     setLoading(true);
     setError('');
     setReadme('');
+    setHeadings([]);
+    setActiveHeading('');
     fetch(`https://api.github.com/repos/${project.owner}/${project.repo}/readme`, {
       headers: { Accept: 'application/vnd.github.html+json' },
       signal: controller.signal,
     })
       .then(async (response) => {
         if (!response.ok) throw new Error(response.status === 404 ? 'このリポジトリにはREADMEが見つかりませんでした。' : 'READMEを取得できませんでした。時間をおいて再度お試しください。');
-        const html = await response.text();
-        setReadme(html);
+        setReadme(await response.text());
       })
       .catch((err: unknown) => {
         if (err instanceof Error && err.name !== 'AbortError') setError(err.message || 'READMEの取得に失敗しました。');
@@ -105,7 +106,40 @@ function ProjectDetails({ project, headings, setHeadings, activeHeading, setActi
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
-    return (
+    return () => controller.abort();
+  }, [project.owner, project.repo, setHeadings, setActiveHeading]);
+
+  useEffect(() => {
+    if (!readme) { setHeadings([]); return; }
+    const parsed = new DOMParser().parseFromString(sanitizeReadmeHtml(readme), 'text/html');
+    const items = Array.from(parsed.querySelectorAll('h1, h2, h3')).map((heading) => ({
+      id: heading.id,
+      text: heading.textContent?.trim() || '',
+      level: Number(heading.tagName.slice(1)) as 1 | 2 | 3,
+    })).filter((heading) => heading.id && heading.text);
+    setHeadings(items);
+    setActiveHeading(items[0]?.id || '');
+  }, [readme, setHeadings, setActiveHeading]);
+
+  useEffect(() => {
+    if (!readme || headings.length === 0) return;
+    const panel = document.querySelector('.readme-panel');
+    if (!panel) return;
+    const updateActive = () => {
+      const targets = headings.map((heading) => panel.querySelector<HTMLElement>('#' + CSS.escape(heading.id))).filter(Boolean) as HTMLElement[];
+      let current = targets[0];
+      for (const target of targets) {
+        if (target.getBoundingClientRect().top <= 150) current = target;
+        else break;
+      }
+      if (current) setActiveHeading(current.id);
+    };
+    panel.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
+    return () => panel.removeEventListener('scroll', updateActive);
+  }, [readme, headings, setActiveHeading]);
+
+  return (
     <div className="documentation-page">
       <header className="documentation-header">
         <span className="eyebrow">DOCUMENTATION</span>
