@@ -38,7 +38,10 @@ export default function App() {
           <a href="#projects">Projects</a>
           <a href="#about">About</a>
         </nav>
-        <a className="gh" href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a>
+        <div className="social-links">
+          <a className="gh" href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a className="gh" href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a>
+        </div>
       </header>
 
       <main>
@@ -84,7 +87,10 @@ export default function App() {
             <div>
               <p>気象・地震・防災情報を、より分かりやすく可視化することを目標に開発しています。</p>
               <p>公開データの取得や解析、地図上での表示、現象のシミュレーションなどに取り組んでいます。</p>
-              <a className="about-link" href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHubプロフィール <span>↗</span></a>
+              <div className="about-socials">
+                <a className="about-link" href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHubプロフィール <span>↗</span></a>
+                <a className="about-link" href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">Xプロフィール <span>↗</span></a>
+              </div>
             </div>
           </div>
         </section>
