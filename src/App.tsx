@@ -80,12 +80,10 @@ type ReadmeHeading = { id: string; text: string; level: 1 | 2 | 3 };
 function ReadmeContent({ html }: { html: string }) {
   return <div className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html) }} />;
 }
-function ProjectDetails({ project }: { project: Project }) {
+function ProjectDetails({ project, headings, setHeadings, activeHeading, setActiveHeading }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void }) {
   const [readme, setReadme] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
-  const [activeHeading, setActiveHeading] = useState('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -128,6 +126,8 @@ function ProjectDetails({ project }: { project: Project }) {
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
+  const [activeHeading, setActiveHeading] = useState('');
   useEffect(() => {
     const onSelectProject = (event: Event) => {
       const name = (event as CustomEvent<string>).detail;
@@ -176,7 +176,7 @@ export default function App() {
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} /></main> : <main>
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} /></main> : <main>
         <section className="hero">
           <div className="profile-cover" aria-hidden="true">
             <img src="/portfolio/sakura.jpg" alt="" fetchPriority="high" />
