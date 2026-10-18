@@ -35,7 +35,7 @@ const projects: Project[] = [
   {
     name: 'WIS Viewer',
     category: '気象情報可視化',
-    description: '気象庁の公開データを使い、気温・降水量・風・台風・警報・雨雲レーダーなどを地図上に表示するツール。',
+    description: '気象情報を可視化するツール',
     status: '',
     image: 'https://github.com/user-attachments/assets/8e113cd5-9346-4f72-87f2-0cec5d595508',
     url: 'https://github.com/skotm/wis-viewer',
