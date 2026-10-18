@@ -1142,3 +1142,55 @@ a, button, .filters button, .down, .about-link {
   .project-image-link { margin-bottom: 10px; }
   .project > p:not(.project-category) { margin-bottom: 10px; }
 }
+
+
+/* Compact spacing for descriptions and controls */
+.project > p:not(.project-category) {
+  margin-top: 0;
+  margin-bottom: 8px;
+  line-height: 1.65;
+}
+.project .project-category {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+.project-foot {
+  gap: 8px;
+}
+.project-foot .repo-pill,
+.project-actions .details-button {
+  min-height: 30px;
+  padding: 5px 11px;
+  gap: 10px;
+}
+.project-actions {
+  gap: 7px;
+  margin-top: 8px;
+}
+.filters {
+  gap: 5px;
+}
+.filters button {
+  padding: 6px 11px;
+}
+.tools {
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.search {
+  padding: 5px 0;
+}
+@media (max-width: 600px) {
+  .project > p:not(.project-category) {
+    margin-bottom: 7px;
+    line-height: 1.6;
+  }
+  .project-actions { gap: 6px; }
+  .project-foot .repo-pill,
+  .project-actions .details-button {
+    min-height: 29px;
+    padding: 5px 10px;
+  }
+  .filters { gap: 5px; }
+  .filters button { padding: 6px 10px; }
+}
