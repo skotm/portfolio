@@ -642,14 +642,18 @@ a, button, .filters button, .down, .about-link {
 
 /* Extend the fade beyond the image edge to avoid a visible horizontal seam */
 .hero {
-  background: linear-gradient(
-    to bottom,
-    #f5f3ee 0%,
-    #f5f3ee 78%,
-    #f5f3ee 100%
-  );
+  background: transparent;
 }
 .profile-cover {
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 44%, rgb(0 0 0 / 82%) 62%, rgb(0 0 0 / 48%) 78%, rgb(0 0 0 / 18%) 91%, transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0%, #000 44%, rgb(0 0 0 / 82%) 62%, rgb(0 0 0 / 48%) 78%, rgb(0 0 0 / 18%) 91%, transparent 100%);
+}
+
+
+/* Keep the profile text area transparent; only the photo itself fades out */
+.hero,
+.hero > .eyebrow,
+.hero > h1,
+.hero > .hero-bottom {
+  background-color: transparent;
 }
