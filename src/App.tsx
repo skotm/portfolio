@@ -214,8 +214,16 @@ export default function App() {
                   {project.status && <span>{project.status}</span>}
                 </div>
                 {project.image && (
-                  <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のプレビュー'}>
-                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                  <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
+                    <img className="project-image" src={project.image} alt="" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                    <span className="project-image-shade" aria-hidden="true" />
+                    <span className="project-image-caption">
+                      <span className="project-image-title">{project.name}</span>
+                      <span className="project-image-tags">
+                        <span>{project.category}</span>
+                        {project.status && <span>{project.status}</span>}
+                      </span>
+                    </span>
                   </a>
                 )}
                 <h3>{project.name}</h3>
