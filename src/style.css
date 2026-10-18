@@ -164,3 +164,61 @@ footer{border-top:1px solid #ededed}
  .about{padding:48px 0 38px}
  .about-grid{grid-template-columns:1fr;gap:16px;padding:24px 0 10px}
 }
+
+
+/* Readability and gentle rounded geometry */
+:root{font-size:16px}
+body{font-size:16px;line-height:1.7}
+.shell{max-width:1240px}
+.nav{height:80px}
+.logo{font-size:22px}
+.nav nav{font-size:14px;gap:30px}
+.gh{font-size:12px}
+.hero{padding:66px 0 54px}
+.hero>.eyebrow,.eyebrow{font-size:12px;letter-spacing:.035em}
+.hero h1{font-size:clamp(52px,7vw,82px);line-height:1.12;letter-spacing:-.055em;margin:32px 0 24px}
+.hero-bottom p{font-size:15px;line-height:1.95}
+.heading h2{font-size:clamp(38px,4.5vw,54px);line-height:1.15}
+.heading sup{font-size:12px}
+.project{padding:24px 18px 22px;border:1px solid #e9e9e9;border-radius:16px;margin-bottom:2px;transition:border-color .18s,box-shadow .18s}
+.project:hover{border-color:#d8d8d8;box-shadow:0 5px 18px #00000006}
+.projects{gap:18px}
+.project-meta{font-size:11px;margin-bottom:16px}
+.project h3{font-size:23px;line-height:1.35;letter-spacing:-.025em}
+.project .project-category{font-size:13px;line-height:1.6}
+.project>p{font-size:14px;line-height:1.85}
+.project-foot{font-size:11px;margin-top:22px;padding-top:13px}
+.project-foot a{font-size:18px}
+.about{padding:66px 0 58px}
+.about-grid h2{font-size:clamp(38px,4.5vw,54px);line-height:1.15}
+.about-grid p{font-size:14px;line-height:2}
+.about-link{font-size:14px;padding-bottom:10px}
+footer .logo{font-size:20px}
+footer>a:last-child{font-size:12px}
+@media(max-width:900px){
+ .nav nav{gap:20px}
+ .project{padding:21px 15px}
+ .project h3{font-size:21px}
+}
+@media(max-width:600px){
+ body{font-size:16px}
+ .nav{height:68px}
+ .logo{font-size:21px}
+ .nav nav{font-size:13px;gap:14px}
+ .gh{font-size:11px}
+ .hero{padding:48px 0 38px}
+ .hero h1{font-size:clamp(46px,11vw,58px);margin:27px 0 20px}
+ .hero-bottom p{font-size:14px;line-height:1.9}
+ .section{padding:50px 0}
+ .heading h2{font-size:40px}
+ .projects{gap:13px}
+ .project{padding:20px 16px;border-radius:14px}
+ .project-meta{font-size:10px}
+ .project h3{font-size:21px}
+ .project .project-category{font-size:13px}
+ .project>p{font-size:14px}
+ .about{padding:48px 0 40px}
+ .about-grid h2{font-size:40px}
+ .about-grid p{font-size:14px}
+ footer{height:72px}
+}
