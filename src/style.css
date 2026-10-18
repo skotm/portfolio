@@ -515,3 +515,26 @@ a, button, .filters button, .down, .about-link {
 .readme-content th { background: #f6f6f6; font-weight: 600; }
 .readme-content hr { border: 0; border-top: 1px solid #e5e5e5; margin: 20px 0; }
 .readme-content .highlight { max-width: 100%; overflow: auto; }
+
+
+/* README headings: clear hierarchy with subtle underline; hide GitHub heading-link icons */
+.readme-content h1,
+.readme-content h2,
+.readme-content h3,
+.readme-content h4,
+.readme-content h5,
+.readme-content h6 {
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid #e5e5e5;
+}
+.readme-content h1 { padding-bottom: 0.3em; border-bottom-width: 2px; }
+.readme-content h2 { border-bottom-width: 1px; }
+.readme-content h3,
+.readme-content h4,
+.readme-content h5,
+.readme-content h6 { border-bottom-color: #eeeeee; }
+.readme-content .anchor,
+.readme-content a.anchor,
+.readme-content .octicon-link {
+  display: none !important;
+}
