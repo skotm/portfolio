@@ -80,7 +80,7 @@ type ReadmeHeading = { id: string; text: string; level: 1 | 2 | 3 };
 function ReadmeContent({ html }: { html: string }) {
   return <div className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html) }} />;
 }
-function ProjectDetails({ project, headings, setHeadings, activeHeading, setActiveHeading }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void }) {
+function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void }) {
   const [readme, setReadme] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
