@@ -191,7 +191,7 @@ export default function App() {
                 </div>
                 {project.image && (
                   <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のプレビュー'}>
-                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
                   </a>
                 )}
                 <h3>{project.name}</h3>
