@@ -200,6 +200,7 @@ export default function App() {
                   <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
                     <img className="project-image" src={project.image} alt="" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
                     <span className="project-image-shade" aria-hidden="true" />
+                    <span className="project-image-number">{String(index + 1).padStart(2, '0')}</span>
                     <span className="project-image-caption">
                       <span className="project-image-title">{project.name}</span>
                       <span className="project-image-tags">
