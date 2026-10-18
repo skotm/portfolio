@@ -330,3 +330,20 @@ a, button, .filters button, .down, .about-link {
   object-fit: contain;
   object-position: center;
 }
+
+
+/* Let each screenshot frame follow the image's natural aspect ratio */
+.project-image-link {
+  aspect-ratio: auto;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+.project-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+}
