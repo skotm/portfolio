@@ -672,3 +672,12 @@ a, button, .filters button, .down, .about-link {
 .profile-cover {
   top: -1px;
 }
+
+
+/* Close the remaining gap directly below the header divider */
+.shell > main {
+  margin-top: -24px;
+}
+.shell > main > .hero {
+  margin-top: 0;
+}
