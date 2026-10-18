@@ -681,3 +681,29 @@ a, button, .filters button, .down, .about-link {
 .shell > main > .hero {
   margin-top: 0;
 }
+
+
+/* Compact icon-only social links in the header */
+.social-links .social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  color: #202020;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.social-links .social-icon svg {
+  display: block;
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+.social-links .social-icon:hover {
+  color: #777;
+}
+.social-links .x-icon svg {
+  width: 17px;
+  height: 17px;
+}
