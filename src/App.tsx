@@ -25,7 +25,7 @@ const projects: Project[] = [
   {
     name: 'MeteoQuake-KyoshinViewer',
     category: '強震モニタ可視化',
-    description: 'リアルタイム震度ビュワー',
+    description: 'リアルタイム震度ビューアー',
     status: '',
     image: 'https://github.com/user-attachments/assets/6f18089b-818d-495b-9cc3-c3103e849489',
     url: 'https://github.com/skotm/MeteoQuake-KyoshinViewer',
