@@ -989,3 +989,20 @@ a, button, .filters button, .down, .about-link {
   .sidebar-projects { gap: 1px; }
   .sidebar-projects a { padding-top: 5px; padding-bottom: 5px; }
 }
+
+
+/* In landscape, hide the top site header and let the sidebar serve as primary navigation */
+@media (orientation: landscape) and (min-width: 700px) {
+  .shell > .nav { display: none; }
+  .shell > main { margin-top: 0; }
+  .shell > main > .hero { padding-top: 0; }
+  .details-backdrop { padding-left: 234px; }
+  .details-dialog { width: min(1000px, 100%); }
+}
+@media (orientation: landscape) and (min-width: 700px) and (max-width: 900px) {
+  .details-backdrop { padding-left: 190px; }
+}
+@media (orientation: landscape) and (max-height: 600px) and (min-width: 700px) {
+  .details-backdrop { padding-top: 5px; padding-bottom: 5px; }
+  .details-dialog { max-height: calc(100dvh - 10px); }
+}
