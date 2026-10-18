@@ -63,7 +63,8 @@ const projects: Project[] = [
 
 function sanitizeReadmeHtml(html: string): string {
   const document = new DOMParser().parseFromString(html, 'text/html');
-  document.querySelectorAll('script, style, iframe, object, embed, form, input, button').forEach((node) => node.remove());
+  document.querySelectorAll('script, style, iframe, object, embed, form, input, button, a.anchor, .anchor, [class~="octicon-link"]').forEach((node) => node.remove());
+  document.querySelectorAll('h1 a, h2 a, h3 a, h4 a, h5 a, h6 a').forEach((node) => { if (node.querySelector('svg') || node.classList.contains('anchor')) node.remove(); });
   document.body.querySelectorAll('*').forEach((element) => {
     Array.from(element.attributes).forEach((attribute) => {
       const name = attribute.name.toLowerCase();
