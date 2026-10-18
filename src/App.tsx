@@ -25,7 +25,7 @@ const projects: Project[] = [
   },
   {
     name: 'MeteoQuake-KyoshinViewer',
-    category: '強震モニタ可視化',
+    category: 'リアルタイム震度',
     description: 'リアルタイム震度ビューアー',
     status: '',
     image: 'https://github.com/user-attachments/assets/6f18089b-818d-495b-9cc3-c3103e849489',
@@ -35,7 +35,7 @@ const projects: Project[] = [
   },
   {
     name: 'WIS Viewer',
-    category: '気象情報可視化',
+    category: '気象',
     description: '気象情報を可視化するツール',
     status: '',
     image: 'https://github.com/user-attachments/assets/8e113cd5-9346-4f72-87f2-0cec5d595508',
