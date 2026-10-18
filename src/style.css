@@ -657,3 +657,18 @@ a, button, .filters button, .down, .about-link {
 .hero > .hero-bottom {
   background-color: transparent;
 }
+
+
+/* Remove the gap between the header divider and the profile photo */
+.nav {
+  margin-bottom: 0;
+}
+.shell:has(> .nav) {
+  padding-top: 0;
+}
+.hero {
+  margin-top: 0;
+}
+.profile-cover {
+  top: -1px;
+}
