@@ -37,27 +37,10 @@ const projects: Project[] = [
     category: '気象情報可視化',
     description: '気象庁の公開データを使い、気温・降水量・風・台風・警報・雨雲レーダーなどを地図上に表示するツール。',
     status: '',
+    image: 'https://github.com/user-attachments/assets/8e113cd5-9346-4f72-87f2-0cec5d595508',
     url: 'https://github.com/skotm/wis-viewer',
     owner: 'skotm',
     repo: 'wis-viewer',
-  },
-  {
-    name: 'EQS Viewer',
-    category: '地震情報可視化',
-    description: '地震情報や観測データをリアルタイムで表示するWebアプリケーション。',
-    status: '',
-    url: 'https://github.com/skotm/eqs-viewer',
-    owner: 'skotm',
-    repo: 'eqs-viewer',
-  },
-  {
-    name: 'EQS',
-    category: '地震シミュレーション',
-    description: '仮想地震の発生から揺れの伝播までを再現するシミュレーションツール。',
-    status: '',
-    url: 'https://github.com/skotm/eqs',
-    owner: 'skotm',
-    repo: 'eqs',
   },
 ];
 
@@ -211,7 +194,7 @@ export default function App() {
               <article className="project" key={project.name}>
                 <div className="project-meta">
                   <span>{String(index + 1).padStart(2, '0')}</span>
-                  {project.status && <span>{project.status}</span>}
+                  {!project.image && project.status && <span>{project.status}</span>}
                 </div>
                 {project.image && (
                   <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
@@ -226,8 +209,10 @@ export default function App() {
                     </span>
                   </a>
                 )}
-                <h3>{project.name}</h3>
-                <p className="project-category">{project.category}</p>
+                {!project.image && <>
+                  <h3>{project.name}</h3>
+                  <p className="project-category">{project.category}</p>
+                </>}
                 <p>{project.description}</p>
                 <div className="project-actions">
                   <button className="details-button" onClick={() => setSelectedProject(project)}>詳細 <span>↗</span></button>
