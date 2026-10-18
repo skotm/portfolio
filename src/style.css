@@ -1720,3 +1720,25 @@ a, button, .filters button, .down, .about-link {
   .documentation-page { padding:24px 18px; }
   .documentation-header { margin-bottom:20px; }
 }
+
+
+/* Always-visible navigation from README back to the portfolio */
+.documentation-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 22px;
+  padding: 9px 13px;
+  border: 1px solid var(--line, #d9d8d0);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease;
+}
+.documentation-back:hover {
+  background: #eeece6;
+  border-color: #aaa99f;
+}
