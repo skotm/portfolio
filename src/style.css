@@ -1108,3 +1108,37 @@ a, button, .filters button, .down, .about-link {
 @media (max-width: 600px) {
   .project-image-number { top: 11px; left: 11px; min-width: 30px; height: 27px; font-size: 10px; }
 }
+
+
+/* Reduce inner whitespace in project cards */
+.project {
+  padding: 13px;
+}
+.project-meta {
+  margin-bottom: 11px;
+}
+.project-image-link {
+  margin-bottom: 11px;
+}
+.project h3 {
+  margin-bottom: 5px;
+}
+.project .project-category {
+  margin-bottom: 7px;
+}
+.project > p:not(.project-category) {
+  margin-bottom: 12px;
+}
+.project-foot .repo-pill,
+.project-actions .details-button {
+  min-height: 33px;
+}
+@media (max-width: 900px) {
+  .project { padding: 12px; }
+}
+@media (max-width: 600px) {
+  .project { padding: 12px; }
+  .project-meta { margin-bottom: 10px; }
+  .project-image-link { margin-bottom: 10px; }
+  .project > p:not(.project-category) { margin-bottom: 10px; }
+}
