@@ -538,3 +538,48 @@ a, button, .filters button, .down, .about-link {
 .readme-content .octicon-link {
   display: none !important;
 }
+
+
+/* Sakura profile cover with a soft fade into the white page */
+.hero {
+  position: relative;
+  isolation: isolate;
+}
+.profile-cover {
+  position: relative;
+  width: calc(100% + 12vw);
+  height: clamp(220px, 38vw, 470px);
+  margin: -66px -6vw 38px;
+  overflow: hidden;
+  background: #fff;
+  pointer-events: none;
+}
+.profile-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0%) 38%,
+    rgb(255 255 255 / 22%) 58%,
+    rgb(255 255 255 / 68%) 78%,
+    #fff 100%
+  );
+}
+.profile-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 43%;
+}
+@media (max-width: 600px) {
+  .profile-cover {
+    width: calc(100% + 12vw);
+    height: clamp(210px, 64vw, 330px);
+    margin: -48px -6vw 26px;
+  }
+  .profile-cover img {
+    object-position: center 45%;
+  }
+}
