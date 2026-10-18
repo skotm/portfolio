@@ -284,3 +284,36 @@ a, button, .filters button, .down, .about-link {
     transition: none;
   }
 }
+
+
+/* Project screenshot previews */
+.project-image-link {
+  display: block;
+  overflow: hidden;
+  margin: -1px 0 22px;
+  border: 1px solid #e8e8e8;
+  border-radius: 14px;
+  background: #f4f4f4;
+  aspect-ratio: 16 / 9;
+}
+.project-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .28s ease, opacity .2s ease;
+}
+.project-image-link:hover .project-image {
+  transform: scale(1.025);
+}
+@media (max-width: 600px) {
+  .project-image-link {
+    margin-bottom: 18px;
+    border-radius: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-image {
+    transition: none;
+  }
+}
