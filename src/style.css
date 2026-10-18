@@ -1194,3 +1194,13 @@ a, button, .filters button, .down, .about-link {
   .filters { gap: 5px; }
   .filters button { padding: 6px 10px; }
 }
+
+
+/* Remove the oversized blank area between project descriptions and actions */
+.project > p:not(.project-category) {
+  flex: 0 0 auto;
+  margin-bottom: 10px;
+}
+.project-actions {
+  margin-top: 0;
+}
