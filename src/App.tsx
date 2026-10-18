@@ -80,13 +80,12 @@ type ReadmeHeading = { id: string; text: string; level: 1 | 2 | 3 };
 function ReadmeContent({ html }: { html: string }) {
   return <div className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html) }} />;
 }
-function ProjectDetails({ project, onClose }: { project: Project; onClose: () => void }) {
+function ProjectDetails({ project }: { project: Project }) {
   const [readme, setReadme] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -108,102 +107,21 @@ function ProjectDetails({ project, onClose }: { project: Project; onClose: () =>
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
-    return () => controller.abort();
-  }, [project.owner, project.repo]);
-
-  useEffect(() => {
-    if (!readme) { setHeadings([]); return; }
-    const parsed = new DOMParser().parseFromString(sanitizeReadmeHtml(readme), 'text/html');
-    const items = Array.from(parsed.querySelectorAll('h1, h2, h3')).map((heading) => ({
-      id: heading.id,
-      text: heading.textContent?.trim() || '',
-      level: Number(heading.tagName.slice(1)) as 1 | 2 | 3,
-    })).filter((heading) => heading.id && heading.text);
-    setHeadings(items);
-    setActiveHeading(items[0]?.id || '');
-  }, [readme]);
-
-  useEffect(() => {
-    if (!readme || headings.length === 0) return;
-    const panel = document.querySelector('.readme-panel');
-    if (!panel) return;
-    const updateActive = () => {
-      const targets = headings.map((heading) => panel.querySelector<HTMLElement>('#' + CSS.escape(heading.id))).filter(Boolean) as HTMLElement[];
-      let current = targets[0];
-      for (const target of targets) {
-        if (target.getBoundingClientRect().top <= 150) current = target;
-        else break;
-      }
-      if (current) setActiveHeading(current.id);
-    };
-    panel.addEventListener('scroll', updateActive, { passive: true });
-    updateActive();
-    return () => panel.removeEventListener('scroll', updateActive);
-  }, [readme, headings]);
-
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { setSidebarOpen(false); onClose(); }
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose]);
-
-  return (
-    <div className="details-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <section className="details-dialog" role="dialog" aria-modal="true" aria-labelledby="details-title">
-        <div className="details-header">
-          <div className="details-title-group">
-            <span className="eyebrow">REPOSITORY DETAILS</span>
-            <h2 id="details-title">{project.name}</h2>
-            <p>{project.category}</p>
-          </div>
-          <div className="details-header-extra">
-            <p className="details-header-description">{project.description}</p>
-            <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubで開く ↗</a>
-          </div>
-          <button className="details-close" onClick={onClose} aria-label="詳細を閉じる">×</button>
+    return (
+    <div className="documentation-page">
+      <header className="documentation-header">
+        <span className="eyebrow">DOCUMENTATION</span>
+        <h1>{project.name}</h1>
+        <p>{project.description}</p>
+        <div className="documentation-meta"><span>{project.category}</span>{project.status && <span>{project.status}</span>}<a href={project.url} target="_blank" rel="noreferrer">GitHubで開く ↗</a></div>
+      </header>
+      <div className="documentation-content">
+        <div className="readme-panel">
+          {loading && <p className="readme-state">READMEを読み込み中…</p>}
+          {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
+          {!loading && !error && readme && <ReadmeContent html={readme} />}
         </div>
-        <p className="details-description">{project.description}</p>
-        <div className="readme-heading">
-          <button className="readme-mobile-toc" onClick={() => setSidebarOpen(true)} aria-expanded={sidebarOpen} aria-controls="readme-sidebar">☰ 目次</button>
-          <h3>README</h3>
-          <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubで開く ↗</a>
-        </div>
-        {sidebarOpen && <button className="readme-sidebar-backdrop" aria-label="目次を閉じる" onClick={() => setSidebarOpen(false)} />}
-        <div className="readme-layout">
-          <aside id="readme-sidebar" className={`readme-sidebar${sidebarOpen ? ' is-open' : ''}`} aria-label="READMEナビゲーション">
-            <div className="readme-sidebar-project">
-              <span className="readme-sidebar-kicker">DOCUMENTATION</span>
-              <strong>{project.name}</strong><p>{project.description}</p>
-              <div className="readme-sidebar-tags"><span>{project.category}</span>{project.status && <span>{project.status}</span>}</div>
-              <button className="readme-sidebar-close" onClick={() => setSidebarOpen(false)} aria-label="目次を閉じる">×</button>
-            </div>
-            <div className="readme-toc">
-              <span className="readme-sidebar-label">README CONTENTS</span>
-              {loading && <p className="readme-sidebar-muted">目次を生成中…</p>}
-              {!loading && !error && headings.length === 0 && <p className="readme-sidebar-muted">目次に表示できる見出しはありません。</p>}
-              {headings.map((heading) => <a key={heading.id} className={`readme-toc-link level-${heading.level}${activeHeading === heading.id ? ' is-active' : ''}`} href={'#' + heading.id} onClick={(event) => {
-                event.preventDefault();
-                document.querySelector('.readme-panel #' + CSS.escape(heading.id))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                setActiveHeading(heading.id); setSidebarOpen(false);
-              }}>{heading.text}</a>)}
-            </div>
-            <div className="readme-sidebar-footer">
-              <span className="readme-sidebar-label">LINKS</span>
-              <a href={project.url} target="_blank" rel="noreferrer">GitHubリポジトリ <span>↗</span></a>
-              {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noreferrer">公開デモ <span>↗</span></a>}
-              <span className="readme-sidebar-label readme-projects-label">PROJECTS</span>
-              {projects.map((item, index) => <button key={item.name} className={item.name === project.name ? 'is-current' : ''} onClick={() => { setSidebarOpen(false); if (item.name !== project.name) window.dispatchEvent(new CustomEvent('portfolio:select-project', { detail: item.name })); }}><span>{String(index + 1).padStart(2, '0')}</span>{item.name}</button>)}
-            </div>
-          </aside>
-          <div className="readme-panel">
-            {loading && <p className="readme-state">READMEを読み込み中…</p>}
-            {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
-            {!loading && !error && readme && <ReadmeContent html={readme} />}
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
@@ -239,22 +157,26 @@ export default function App() {
       </header>
 
       <aside className="site-sidebar" aria-label="サイトサイドバー">
-        <a className="sidebar-brand" href="#top">skotm<span>PORTFOLIO</span></a>
-        <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
-          <a href="#top"><span>01</span> Profile</a>
-          <a href="#projects"><span>02</span> Projects</a>
-          <a href="#about"><span>03</span> About</a>
-        </nav>
-        <div className="sidebar-projects">
-          <span className="sidebar-label">PROJECTS</span>
-          {projects.map((project, index) => <a key={project.name} href="#projects" onClick={() => setSelectedProject(project)}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
-        </div>
-        <div className="sidebar-socials">
-          <a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a>
-          <a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a>
-        </div>
+        <a className="sidebar-brand" href="#top" onClick={() => setSelectedProject(null)}>skotm<span>{selectedProject ? 'DOCUMENTATION' : 'PORTFOLIO'}</span></a>
+        {!selectedProject ? <>
+          <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
+            <a href="#top"><span>01</span> Profile</a>
+            <a href="#projects"><span>02</span> Projects</a>
+            <a href="#about"><span>03</span> About</a>
+          </nav>
+          <div className="sidebar-projects"><span className="sidebar-label">PROJECTS</span>
+            {projects.map((project, index) => <a key={project.name} href="#projects" onClick={(event) => { event.preventDefault(); setSelectedProject(project); }}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
+          </div>
+        </> : <>
+          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); setSelectedProject(null); }}>← Projects に戻る</a>
+          <div className="sidebar-projects"><span className="sidebar-label">README CONTENTS</span>
+            {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); document.querySelector('.readme-panel #' + CSS.escape(heading.id))?.scrollIntoView({behavior:'smooth',block:'start'}); setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
+          </div>
+          <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();setSelectedProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
+        </>}
+        <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      <main>
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} /></main> : <main>
         <section className="hero">
           <div className="profile-cover" aria-hidden="true">
             <img src="/portfolio/sakura.jpg" alt="" fetchPriority="high" />
@@ -328,13 +250,12 @@ export default function App() {
             </div>
           </div>
         </section>
-      </main>
+      </main>}
 
       <footer>
         <a className="logo" href="#top">skotm</a>
         <a href="#top">ページ上部へ ↑</a>
       </footer>
-      {selectedProject && <ProjectDetails project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </div>
   );
 }
