@@ -171,6 +171,22 @@ export default function App() {
         </div>
       </header>
 
+      <aside className="site-sidebar" aria-label="サイトサイドバー">
+        <a className="sidebar-brand" href="#top">skotm<span>PORTFOLIO</span></a>
+        <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
+          <a href="#top"><span>01</span> Profile</a>
+          <a href="#projects"><span>02</span> Projects</a>
+          <a href="#about"><span>03</span> About</a>
+        </nav>
+        <div className="sidebar-projects">
+          <span className="sidebar-label">PROJECTS</span>
+          {projects.map((project, index) => <a key={project.name} href="#projects" onClick={() => setSelectedProject(project)}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
+        </div>
+        <div className="sidebar-socials">
+          <a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a>
+        </div>
+      </aside>
       <main>
         <section className="hero">
           <div className="profile-cover" aria-hidden="true">
