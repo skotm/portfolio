@@ -72,8 +72,10 @@ export default function App() {
                 <p className="project-category">{project.category}</p>
                 <p>{project.description}</p>
                 <div className="project-foot">
-                  <span>GitHub repository</span>
-                  <a href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>↗</a>
+                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
+                    <span>GitHub repository</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
                 </div>
               </article>
             ))}
