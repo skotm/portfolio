@@ -583,3 +583,54 @@ a, button, .filters button, .down, .about-link {
     object-position: center 45%;
   }
 }
+
+
+/* Overlay the profile text over the lower half of the sakura photo */
+.hero {
+  padding-top: 0;
+}
+.profile-cover {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: -6vw;
+  width: calc(100% + 12vw);
+  height: clamp(360px, 47vw, 590px);
+  margin: 0;
+}
+.hero > .eyebrow,
+.hero > h1,
+.hero > .hero-bottom {
+  position: relative;
+  z-index: 1;
+}
+.hero > .eyebrow {
+  padding-top: clamp(230px, 30vw, 370px);
+}
+.hero h1 {
+  margin-top: 18px;
+  margin-bottom: 34px;
+}
+.profile-cover::after {
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0%) 35%,
+    rgb(255 255 255 / 8%) 50%,
+    rgb(245 243 238 / 58%) 73%,
+    #f5f3ee 100%
+  );
+}
+@media (max-width: 600px) {
+  .profile-cover {
+    left: -5.2vw;
+    width: calc(100% + 10.4vw);
+    height: 390px;
+  }
+  .hero > .eyebrow {
+    padding-top: 235px;
+  }
+  .hero h1 {
+    margin-top: 16px;
+    margin-bottom: 26px;
+  }
+}
