@@ -455,3 +455,63 @@ a, button, .filters button, .down, .about-link {
 @media (prefers-reduced-motion: reduce) {
   .details-button { transition: none; }
 }
+
+
+/* GitHub-rendered Markdown content */
+.readme-content img, .readme-content video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 14px auto;
+  border-radius: 8px;
+}
+.readme-content a {
+  color: #0969da;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  overflow-wrap: anywhere;
+}
+.readme-content a:hover { color: #0550ae; }
+.readme-content strong { font-weight: 700; }
+.readme-content em { font-style: italic; }
+.readme-content del { color: #777; }
+.readme-content ul, .readme-content ol {
+  padding-left: 1.7em;
+  margin: 10px 0 16px;
+}
+.readme-content li { padding-left: 3px; margin: 4px 0; }
+.readme-content pre {
+  overflow: auto;
+  padding: 14px 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 9px;
+  background: #f6f8fa;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.readme-content pre code {
+  padding: 0;
+  background: transparent;
+  white-space: pre;
+}
+.readme-content :not(pre) > code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #f1f1f1;
+  font-size: .92em;
+}
+.readme-content table {
+  display: block;
+  max-width: 100%;
+  overflow: auto;
+  border-collapse: collapse;
+  margin: 14px 0;
+}
+.readme-content th, .readme-content td {
+  padding: 7px 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+.readme-content th { background: #f6f6f6; font-weight: 600; }
+.readme-content hr { border: 0; border-top: 1px solid #e5e5e5; margin: 20px 0; }
+.readme-content .highlight { max-width: 100%; overflow: auto; }
