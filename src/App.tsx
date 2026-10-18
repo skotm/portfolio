@@ -191,7 +191,7 @@ export default function App() {
                 </div>
                 {project.image && (
                   <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のプレビュー'}>
-                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading="lazy" onError={(event) => { const image = event.currentTarget; if (project.name === 'MeteoQuake' && !image.dataset.fallback) { image.dataset.fallback = 'true'; image.src = 'https://github.com/skotm/MeteoQuake/raw/HEAD/README.md'; } else { image.style.display = 'none'; } }} />
+                    <img className="project-image" src={project.image} alt={project.name + ' のプレビュー'} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
                   </a>
                 )}
                 <h3>{project.name}</h3>
