@@ -16,7 +16,7 @@ const projects: Project[] = [
   {
     name: 'MeteoQuake',
     category: '地震・気象・防災',
-    description: '地震・気象・防災情報を扱うアプリケーション。',
+    description: '地震・気象・防災情報を扱うアプリ',
     status: '開発中',
     image: 'https://github.com/user-attachments/assets/c5297fdd-1c50-4b18-bb80-b0be32356a59',
     url: 'https://github.com/skotm/MeteoQuake',
