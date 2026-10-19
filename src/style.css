@@ -1832,3 +1832,31 @@ a, button, .filters button, .down, .about-link {
   width: 100%;
   margin: 0;
 }
+
+
+/* Horizontal project carousel on the home page */
+#projects .projects {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(280px, 42%);
+  grid-template-columns: none;
+  gap: 18px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 18px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2px;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+#projects .project {
+  scroll-snap-align: start;
+  height: 100%;
+}
+#projects .projects::-webkit-scrollbar { height: 6px; }
+#projects .projects::-webkit-scrollbar-track { background: #f2f2f2; border-radius: 99px; }
+#projects .projects::-webkit-scrollbar-thumb { background: #c8c8c8; border-radius: 99px; }
+@media (max-width: 700px) {
+  #projects .projects { grid-auto-columns: minmax(260px, 84%); gap: 14px; }
+}
