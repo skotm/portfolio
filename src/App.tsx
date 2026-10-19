@@ -394,8 +394,7 @@ export default function App() {
         <section className="section" id="projects">
           <div className="heading projects-heading">
             <div>
-              <span className="eyebrow">PROJECTS</span>
-              <h2>Projects <sup>{String(projects.length).padStart(2, '0')}</sup></h2>
+              <h2>Projects</h2>
             </div>
             <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
           </div>
