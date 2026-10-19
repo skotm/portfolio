@@ -1788,3 +1788,34 @@ a, button, .filters button, .down, .about-link {
   color: #777;
   font-size: 13px;
 }
+
+
+/* Mobile README page: use nearly the full viewport width */
+@media (max-width: 699px), (orientation: portrait) {
+  .shell:has(> main#documentation) {
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .shell:has(> main#documentation) > .nav {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+  .shell > main#documentation .documentation-page {
+    width: 100%;
+    padding: 24px 16px;
+  }
+  .shell > main#documentation .documentation-header,
+  .shell > main#documentation .documentation-content {
+    width: 100%;
+    max-width: none;
+  }
+  .shell > main#documentation .documentation-header {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .shell > main#documentation .readme-content {
+    min-width: 0;
+  }
+}
