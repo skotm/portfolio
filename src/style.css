@@ -1923,3 +1923,171 @@ a, button, .filters button, .down, .about-link {
     padding: 13px;
   }
 }
+
+
+/* Dedicated project directory page */
+#project-directory {
+  min-width: 0;
+}
+.project-directory-page {
+  padding: clamp(28px, 5vw, 64px) 0 72px;
+}
+.project-directory-header {
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line, #e4e4e4);
+  margin-bottom: 24px;
+}
+.project-directory-header h1 {
+  margin: 16px 0 10px;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.08;
+  letter-spacing: -.055em;
+}
+.project-directory-header h1 sup {
+  display: inline-block;
+  margin-left: 8px;
+  color: #858585;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  vertical-align: top;
+}
+.project-directory-header p {
+  margin: 0;
+  color: #6d6d6d;
+  line-height: 1.8;
+}
+.project-directory-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.project-directory-filters button {
+  padding: 8px 14px;
+  border: 1px solid #dedede;
+  border-radius: 999px;
+  background: #fff;
+  color: #555;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.project-directory-filters button:hover,
+.project-directory-filters button.is-active {
+  border-color: #202020;
+  background: #202020;
+  color: #fff;
+}
+.project-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.directory-project-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 20px;
+  background: #fff;
+  transition: border-color .2s ease, transform .2s ease;
+}
+.directory-project-card:hover {
+  border-color: #c8c8c8;
+  transform: translateY(-2px);
+}
+.directory-project-image {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #f4f4f2;
+}
+.directory-project-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+.directory-project-card:hover .directory-project-image img { transform: scale(1.025); }
+.directory-image-placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: #777;
+  font-size: 32px;
+}
+.directory-project-number {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  display: grid;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 8px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 999px;
+  background: rgba(25,25,25,.5);
+  color: white;
+  font-size: 11px;
+  backdrop-filter: blur(8px);
+}
+.directory-project-body { padding: 18px; }
+.directory-project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.directory-project-meta span {
+  padding: 5px 9px;
+  border: 1px solid #e4e4e4;
+  border-radius: 999px;
+  color: #666;
+  font-size: 11px;
+}
+.directory-project-body h2 {
+  margin: 0 0 8px;
+  font-size: clamp(19px, 2vw, 25px);
+  line-height: 1.3;
+  letter-spacing: -.035em;
+  overflow-wrap: anywhere;
+}
+.directory-project-body > p {
+  min-height: 3.2em;
+  margin: 0 0 16px;
+  color: #666;
+  line-height: 1.65;
+}
+.directory-project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.directory-project-actions .details-button,
+.directory-project-actions .repo-pill {
+  min-width: 0;
+  white-space: nowrap;
+}
+.directory-project-actions .repo-pill { justify-content: center; }
+.directory-home-link {
+  margin-top: 32px;
+  padding: 9px 0;
+  border: 0;
+  background: transparent;
+  color: #555;
+  font: inherit;
+  cursor: pointer;
+}
+.directory-home-link:hover { color: #111; }
+@media (max-width: 700px) {
+  .project-directory-page { padding-top: 28px; }
+  .project-directory-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .directory-project-body { padding: 15px; }
+  .directory-project-body > p { min-height: 0; }
+}
