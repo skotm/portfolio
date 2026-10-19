@@ -305,7 +305,7 @@ export default function App() {
             {['すべて', ...Array.from(new Set(projects.map((project) => project.category)))].map((category) => <button key={category} type="button" className={projectCategory === category ? 'is-active' : ''} aria-pressed={projectCategory === category} onClick={() => setProjectCategory(category)}>{category}</button>)}
           </div>
           <div className="project-directory-grid projects">
-            {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project, index) => (
+            {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project) => (
               <article className="project" key={project.name}>
                 <div className="project-meta">
                   {!project.image && <span>{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>}
