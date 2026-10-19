@@ -55,7 +55,7 @@ function sanitizeReadmeHtml(html: string, repositoryUrl?: string): string {
       if (name.startsWith('on') || name === 'srcdoc') element.removeAttribute(attribute.name);
       if (name === 'href' || name === 'src') {
         try {
-          const baseUrl = repositoryUrl ? `${repositoryUrl.replace(/\\/$/, '')}/blob/HEAD/README.md` : window.location.origin;
+          const baseUrl = repositoryUrl ? `${repositoryUrl.replace(/\/$/, '')}/blob/HEAD/README.md` : window.location.origin;
           const parsed = new URL(attribute.value, baseUrl);
           if (name === 'src' && parsed.hostname === 'github.com' && parsed.pathname.includes('/blob/')) {
             parsed.hostname = 'raw.githubusercontent.com';
