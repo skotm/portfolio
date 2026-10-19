@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type Project = {
   name: string;
@@ -45,7 +45,7 @@ const projects: Project[] = [
   },
 ];
 
-function sanitizeReadmeHtml(html: string): string {
+function sanitizeReadmeHtml(html: string, repositoryUrl?: string): string {
   const document = new DOMParser().parseFromString(html, 'text/html');
   document.querySelectorAll('script, style, iframe, object, embed, form, input, button, a.anchor, .anchor, [class~="octicon-link"]').forEach((node) => node.remove());
   document.querySelectorAll('h1 a, h2 a, h3 a, h4 a, h5 a, h6 a').forEach((node) => { if (node.querySelector('svg') || node.classList.contains('anchor')) node.remove(); });
@@ -55,7 +55,12 @@ function sanitizeReadmeHtml(html: string): string {
       if (name.startsWith('on') || name === 'srcdoc') element.removeAttribute(attribute.name);
       if (name === 'href' || name === 'src') {
         try {
-          const parsed = new URL(attribute.value, window.location.origin);
+          const baseUrl = repositoryUrl ? `${repositoryUrl.replace(/\\/$/, '')}/blob/HEAD/README.md` : window.location.origin;
+          const parsed = new URL(attribute.value, baseUrl);
+          if (name === 'src' && parsed.hostname === 'github.com' && parsed.pathname.includes('/blob/')) {
+            parsed.hostname = 'raw.githubusercontent.com';
+            parsed.pathname = parsed.pathname.replace('/blob/', '/');
+          }
           if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') element.removeAttribute(attribute.name);
           else if (name === 'href') { element.setAttribute('target', '_blank'); element.setAttribute('rel', 'noreferrer'); }
         } catch { element.removeAttribute(attribute.name); }
@@ -77,8 +82,35 @@ function sanitizeReadmeHtml(html: string): string {
 
 type ReadmeHeading = { id: string; text: string; level: 1 | 2 | 3 };
 
-function ReadmeContent({ html }: { html: string }) {
-  return <div className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html) }} />;
+function ReadmeContent({ html, repositoryUrl }: { html: string; repositoryUrl: string }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const images = Array.from(root.querySelectorAll('img'));
+    const cleanups = images.map((img) => {
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      let retried = false;
+      const onError = () => {
+        if (!retried) {
+          retried = true;
+          const url = new URL(img.src);
+          url.searchParams.set('_image_retry', String(Date.now()));
+          img.src = url.toString();
+          return;
+        }
+        img.classList.add('readme-image-failed');
+        img.alt = '画像を読み込めませんでした。GitHubでREADMEを開いて確認してください。';
+      };
+      img.addEventListener('error', onError);
+      return () => img.removeEventListener('error', onError);
+    });
+    return () => cleanups.forEach((cleanup) => cleanup());
+  }, [html]);
+
+  return <div ref={contentRef} className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html, repositoryUrl) }} />;
 }
 function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void }) {
   const [readme, setReadme] = useState('');
@@ -152,7 +184,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
         <div className="readme-panel">
           {loading && <p className="readme-state">READMEを読み込み中…</p>}
           {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
-          {!loading && !error && readme && <ReadmeContent html={readme} />}
+          {!loading && !error && readme && <ReadmeContent html={readme} repositoryUrl={project.url} />}
         </div>
       </div>
     </div>
