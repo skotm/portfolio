@@ -351,9 +351,8 @@ export default function App() {
         </section>
       </main>}
 
-      <footer>
-        <a className="logo" href="#top">skotm</a>
-        <a href="#top">ページ上部へ ↑</a>
+      <footer className="site-footer">
+        <p>© 2026 skotm. All rights reserved.</p>
       </footer>
     </div>
   );
