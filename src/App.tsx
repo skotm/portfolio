@@ -245,6 +245,10 @@ export default function App() {
   };
 
   useEffect(() => {
+    // 戻る・進むで画面が切り替わったとき、ブラウザのスクロール位置復元より先頭表示を優先する。
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = 'manual';
+
     const onSelectProject = (event: Event) => {
       const name = (event as CustomEvent<string>).detail;
       const project = projects.find((item) => item.name === name);
@@ -253,13 +257,14 @@ export default function App() {
     const onPopState = () => {
       setSelectedProject(projectFromLocation());
       setShowProjectDirectory(isProjectDirectoryLocation());
-      window.scrollTo(0, 0);
+      window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
     };
     window.addEventListener('portfolio:select-project', onSelectProject);
     window.addEventListener('popstate', onPopState);
     return () => {
       window.removeEventListener('portfolio:select-project', onSelectProject);
       window.removeEventListener('popstate', onPopState);
+      window.history.scrollRestoration = previousScrollRestoration;
     };
   }, []);
 
