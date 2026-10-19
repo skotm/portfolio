@@ -225,7 +225,7 @@ export default function App() {
   };
 
   const returnToPreviousPage = () => {
-    if (window.history.state?.portfolioProject) {
+    if (window.history.state?.portfolioProject || window.history.state?.portfolioView === 'projects') {
       window.history.back();
       return;
     }
