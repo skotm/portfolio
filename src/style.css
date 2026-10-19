@@ -1860,3 +1860,32 @@ a, button, .filters button, .down, .about-link {
 @media (max-width: 700px) {
   #projects .projects { grid-auto-columns: minmax(260px, 84%); gap: 14px; }
 }
+
+
+/* Keep project action buttons on one horizontal row */
+#projects .project-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 10px;
+}
+#projects .project-actions .details-button,
+#projects .project-actions .repo-pill {
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+#projects .project-actions .repo-pill {
+  justify-content: center;
+}
+@media (max-width: 420px) {
+  #projects .project-actions { gap: 7px; }
+  #projects .project-actions .details-button,
+  #projects .project-actions .repo-pill {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+  #projects .project-actions .repo-pill { gap: 7px; }
+}
