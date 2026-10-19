@@ -206,6 +206,13 @@ export default function App() {
   const [projectCategory, setProjectCategory] = useState('すべて');
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}service-worker.js`).catch((error: unknown) => {
+      console.warn('画像キャッシュ用Service Workerを登録できませんでした。', error);
+    });
+  }, []);
   const openProject = (project: Project) => {
     const url = new URL(window.location.href);
     url.searchParams.set('project', project.name);
