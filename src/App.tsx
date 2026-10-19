@@ -196,8 +196,14 @@ function projectFromLocation(): Project | null {
   return projects.find((project) => project.name === name) || null;
 }
 
+function isProjectDirectoryLocation(): boolean {
+  return new URLSearchParams(window.location.search).get('view') === 'projects';
+}
+
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(() => projectFromLocation());
+  const [showProjectDirectory, setShowProjectDirectory] = useState<boolean>(() => isProjectDirectoryLocation());
+  const [projectCategory, setProjectCategory] = useState('すべて');
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
   const openProject = (project: Project) => {
@@ -208,6 +214,16 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  const openProjectDirectory = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    url.searchParams.set('view', 'projects');
+    window.history.pushState({ portfolioView: 'projects' }, '', url);
+    setSelectedProject(null);
+    setShowProjectDirectory(true);
+    window.scrollTo(0, 0);
+  };
+
   const returnToPreviousPage = () => {
     if (window.history.state?.portfolioProject) {
       window.history.back();
@@ -215,8 +231,10 @@ export default function App() {
     }
     const url = new URL(window.location.href);
     url.searchParams.delete('project');
+    url.searchParams.delete('view');
     window.history.replaceState({}, '', url);
     setSelectedProject(null);
+    setShowProjectDirectory(false);
   };
 
   useEffect(() => {
@@ -227,6 +245,7 @@ export default function App() {
     };
     const onPopState = () => {
       setSelectedProject(projectFromLocation());
+      setShowProjectDirectory(isProjectDirectoryLocation());
       window.scrollTo(0, 0);
     };
     window.addEventListener('portfolio:select-project', onSelectProject);
@@ -242,7 +261,7 @@ export default function App() {
       <header className="nav">
         <a className="logo" href="#top">skotm</a>
         <nav aria-label="メインナビゲーション">
-          <a href="#projects">Projects</a>
+          <a href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>Projects</a>
           <a href="#about">About</a>
         </nav>
         <div className="social-links">
@@ -260,7 +279,7 @@ export default function App() {
         {!selectedProject ? <>
           <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
             <a href="#top"><span>01</span> Profile</a>
-            <a href="#projects"><span>02</span> Projects</a>
+            <a href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}><span>02</span> Projects</a>
             <a href="#about"><span>03</span> About</a>
           </nav>
           <div className="sidebar-projects"><span className="sidebar-label">PROJECTS</span>
@@ -275,7 +294,36 @@ export default function App() {
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={returnToPreviousPage} /></main> : <main>
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={returnToPreviousPage} /></main> : showProjectDirectory ? <main id="project-directory">
+        <section className="project-directory-page">
+          <header className="project-directory-header">
+            <span className="eyebrow">PROJECT ARCHIVE</span>
+            <h1>All Projects <sup>{String(projects.length).padStart(2, '0')}</sup></h1>
+            <p>開発したアプリケーション、可視化ツールの一覧。</p>
+          </header>
+          <div className="project-directory-filters" aria-label="カテゴリで絞り込む">
+            {['すべて', ...Array.from(new Set(projects.map((project) => project.category)))].map((category) => <button key={category} type="button" className={projectCategory === category ? 'is-active' : ''} aria-pressed={projectCategory === category} onClick={() => setProjectCategory(category)}>{category}</button>)}
+          </div>
+          <div className="project-directory-grid">
+            {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project, index) => <article className="directory-project-card" key={project.name}>
+              <a className="directory-project-image" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
+                {project.image ? <img src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} /> : <span className="directory-image-placeholder">{String(index + 1).padStart(2, '0')}</span>}
+                <span className="directory-project-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
+              </a>
+              <div className="directory-project-body">
+                <div className="directory-project-meta"><span>{project.category}</span>{project.status && <span>{project.status}</span>}</div>
+                <h2>{project.name}</h2>
+                <p>{project.description}</p>
+                <div className="directory-project-actions">
+                  <button className="details-button" type="button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
+                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer"><span>GitHub repository</span><span aria-hidden="true">↗</span></a>
+                </div>
+              </div>
+            </article>)}
+          </div>
+          <button className="directory-home-link" type="button" onClick={returnToPreviousPage}>← トップページへ戻る</button>
+        </section>
+      </main> : <main>
         <section className="hero">
           <div className="profile-cover" aria-hidden="true">
             <img src="/portfolio/sakura.jpg" alt="" fetchPriority="high" />
