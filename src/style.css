@@ -2123,3 +2123,27 @@ a, button, .filters button, .down, .about-link {
   .projects-heading { gap: 8px; }
   .view-all-projects { gap: 5px; padding-left: 4px; font-size: 12px; }
 }
+
+
+/* Project archive reuses the exact homepage project-card design */
+#project-directory .project-directory-grid.projects {
+  display: grid;
+  grid-auto-flow: row;
+  grid-auto-columns: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  overflow: visible;
+  padding: 4px 2px 18px;
+  scroll-snap-type: none;
+}
+#project-directory .project {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+}
+@media (max-width: 700px) {
+  #project-directory .project-directory-grid.projects {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
