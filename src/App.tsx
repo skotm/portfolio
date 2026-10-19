@@ -261,7 +261,7 @@ export default function App() {
       <header className="nav">
         <a className="logo" href="#top">skotm</a>
         <nav aria-label="メインナビゲーション">
-          <a href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>Projects</a>
+          <a href="#projects">Projects</a>
           <a href="#about">About</a>
         </nav>
         <div className="social-links">
@@ -279,7 +279,7 @@ export default function App() {
         {!selectedProject ? <>
           <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
             <a href="#top"><span>01</span> Profile</a>
-            <a href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}><span>02</span> Projects</a>
+            <a href="#projects"><span>02</span> Projects</a>
             <a href="#about"><span>03</span> About</a>
           </nav>
           <div className="sidebar-projects"><span className="sidebar-label">PROJECTS</span>
@@ -336,11 +336,12 @@ export default function App() {
         </section>
 
         <section className="section" id="projects">
-          <div className="heading">
+          <div className="heading projects-heading">
             <div>
               <span className="eyebrow">PROJECTS</span>
               <h2>Projects <sup>{String(projects.length).padStart(2, '0')}</sup></h2>
             </div>
+            <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
           </div>
           <div className="projects">
             {projects.map((project, index) => (
