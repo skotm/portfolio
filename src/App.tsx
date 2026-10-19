@@ -231,17 +231,27 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
-  const returnToPreviousPage = () => {
-    if (window.history.state?.portfolioProject || window.history.state?.portfolioView === 'projects') {
-      window.history.back();
-      return;
-    }
+  const returnToProjectDirectory = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    url.searchParams.set('view', 'projects');
+    window.history.pushState({ portfolioView: 'projects' }, '', url);
+    setSelectedProject(null);
+    setShowProjectDirectory(true);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  };
+
+  const navigateToHomeSection = (section: 'top' | 'projects' | 'about') => {
     const url = new URL(window.location.href);
     url.searchParams.delete('project');
     url.searchParams.delete('view');
-    window.history.replaceState({}, '', url);
+    window.history.pushState({}, '', url);
     setSelectedProject(null);
     setShowProjectDirectory(false);
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+      if (section === 'top') window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      else document.getElementById(section)?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }));
   };
 
   useEffect(() => {
@@ -287,26 +297,26 @@ export default function App() {
       </header>
 
       <aside className="site-sidebar" aria-label="サイトサイドバー">
-        <a className="sidebar-brand" href="#top" onClick={() => setSelectedProject(null)}>skotm<span>{selectedProject ? 'DOCUMENTATION' : 'PORTFOLIO'}</span></a>
+        <a className="sidebar-brand" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm<span>{selectedProject ? 'DOCUMENTATION' : 'PORTFOLIO'}</span></a>
         {!selectedProject ? <>
           <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
-            <a href="#top"><span>01</span> Profile</a>
-            <a href="#projects"><span>02</span> Projects</a>
-            <a href="#about"><span>03</span> About</a>
+            <a href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}><span>01</span> Profile</a>
+            <a href="#projects" onClick={(event) => { event.preventDefault(); navigateToHomeSection('projects'); }}><span>02</span> Projects</a>
+            <a href="#about" onClick={(event) => { event.preventDefault(); navigateToHomeSection('about'); }}><span>03</span> About</a>
           </nav>
           <div className="sidebar-projects"><span className="sidebar-label">PROJECTS</span>
             {projects.map((project, index) => <a key={project.name} href="#projects" onClick={(event) => { event.preventDefault(); openProject(project); }}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
           </div>
         </> : <>
-          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); returnToPreviousPage(); }}>← Projects に戻る</a>
+          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); returnToProjectDirectory(); }}>← Projects に戻る</a>
           <div className="sidebar-projects"><span className="sidebar-label">README CONTENTS</span>
-            {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); document.querySelector('.readme-panel #' + CSS.escape(heading.id))?.scrollIntoView({behavior:'smooth',block:'start'}); setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
+            {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); const panel = document.querySelector('.readme-panel') as HTMLElement | null; const target = panel?.querySelector<HTMLElement>('#' + CSS.escape(heading.id)); if (panel && target) panel.scrollTo({ top: target.offsetTop - panel.offsetTop, behavior: 'smooth' }); setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
           </div>
           <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();openProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={returnToPreviousPage} /></main> : showProjectDirectory ? <main id="project-directory">
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={() => navigateToHomeSection('top')} /></main> : showProjectDirectory ? <main id="project-directory">
         <section className="project-directory-page">
           <header className="project-directory-header">
             <span className="eyebrow">PROJECT ARCHIVE</span>
@@ -351,7 +361,7 @@ export default function App() {
               </article>
             ))}
           </div>
-          <button className="directory-home-link" type="button" onClick={returnToPreviousPage}>← トップページへ戻る</button>
+          <button className="directory-home-link" type="button" onClick={() => navigateToHomeSection('top')}>← トップページへ戻る</button>
         </section>
       </main> : <main>
         <section className="hero">
