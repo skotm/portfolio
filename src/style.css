@@ -1889,3 +1889,37 @@ a, button, .filters button, .down, .about-link {
   }
   #projects .project-actions .repo-pill { gap: 7px; }
 }
+
+
+/* Match project card width to the image's visible width */
+#projects .projects {
+  grid-auto-columns: minmax(0, 42%);
+}
+#projects .project {
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 22px;
+}
+#projects .project-image-link {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+#projects .project-image-link .project-image {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+@media (max-width: 700px) {
+  #projects .projects {
+    grid-auto-columns: 84%;
+  }
+  #projects .project {
+    padding: 16px;
+  }
+}
+@media (max-width: 420px) {
+  #projects .project {
+    padding: 13px;
+  }
+}
