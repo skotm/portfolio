@@ -324,9 +324,9 @@ export default function App() {
             {projects.map((project, index) => <a key={project.name} href="#projects" onClick={(event) => { event.preventDefault(); openProject(project); }}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
           </div>
         </> : <>
-          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); returnToProjectDirectory(); }}>← Projects に戻る</a>
+          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); returnToProjectDirectory(); }}>← トップページに戻る</a>
           <div className="sidebar-projects"><span className="sidebar-label">README CONTENTS</span>
-            {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); const panel = document.querySelector('.readme-panel') as HTMLElement | null; const target = panel?.querySelector<HTMLElement>('#' + CSS.escape(heading.id)); if (panel && target) panel.scrollTo({ top: target.offsetTop - panel.offsetTop, behavior: 'smooth' }); setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
+            {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); const target = document.querySelector<HTMLElement>('.readme-content #' + CSS.escape(heading.id)); if (target) { const top = target.getBoundingClientRect().top + window.scrollY - 24; window.scrollTo({ top, left: 0, behavior: 'smooth' }); } setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
           </div>
           <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();openProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
         </>}
