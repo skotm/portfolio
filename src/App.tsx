@@ -335,8 +335,7 @@ export default function App() {
       {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={() => navigateToHomeSection('top')} /></main> : showProjectDirectory ? <main id="project-directory">
         <section className="project-directory-page">
           <header className="project-directory-header">
-            <span className="eyebrow">PROJECT ARCHIVE</span>
-            <h1>All Projects <sup>{String(projects.length).padStart(2, '0')}</sup></h1>
+            <h1>All Projects</h1>
             <p>開発したアプリケーション、可視化ツールの一覧。</p>
           </header>
           <div className="project-directory-filters" aria-label="カテゴリで絞り込む">
