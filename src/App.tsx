@@ -304,22 +304,40 @@ export default function App() {
           <div className="project-directory-filters" aria-label="カテゴリで絞り込む">
             {['すべて', ...Array.from(new Set(projects.map((project) => project.category)))].map((category) => <button key={category} type="button" className={projectCategory === category ? 'is-active' : ''} aria-pressed={projectCategory === category} onClick={() => setProjectCategory(category)}>{category}</button>)}
           </div>
-          <div className="project-directory-grid">
-            {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project, index) => <article className="directory-project-card" key={project.name}>
-              <a className="directory-project-image" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
-                {project.image ? <img src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} /> : <span className="directory-image-placeholder">{String(index + 1).padStart(2, '0')}</span>}
-                <span className="directory-project-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
-              </a>
-              <div className="directory-project-body">
-                <div className="directory-project-meta"><span>{project.category}</span>{project.status && <span>{project.status}</span>}</div>
-                <h2>{project.name}</h2>
-                <p>{project.description}</p>
-                <div className="directory-project-actions">
-                  <button className="details-button" type="button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
-                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer"><span>GitHub repository</span><span aria-hidden="true">↗</span></a>
+          <div className="project-directory-grid projects">
+            {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project, index) => (
+              <article className="project" key={project.name}>
+                <div className="project-meta">
+                  {!project.image && <span>{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>}
+                  {!project.image && project.status && <span>{project.status}</span>}
                 </div>
-              </div>
-            </article>)}
+                {project.image && (
+                  <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
+                    <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                    <span className="project-image-shade" aria-hidden="true" />
+                    <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
+                    <span className="project-image-caption">
+                      <span className="project-image-title">{project.name}</span>
+                      <span className="project-image-tags">
+                        <span>{project.category}</span>
+                        {project.status && <span>{project.status}</span>}
+                      </span>
+                    </span>
+                  </a>
+                )}
+                {!project.image && <>
+                  <h3>{project.name}</h3>
+                  <p className="project-category">{project.category}</p>
+                </>}
+                <p>{project.description}</p>
+                <div className="project-actions">
+                  <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
+                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
+                    <span>GitHub repository</span><span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
           <button className="directory-home-link" type="button" onClick={returnToPreviousPage}>← トップページへ戻る</button>
         </section>
