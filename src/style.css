@@ -2147,3 +2147,10 @@ a, button, .filters button, .down, .about-link {
     gap: 14px;
   }
 }
+
+
+/* Remove the small section labels and project count; tighten the headings */
+#projects .projects-heading { margin-bottom: 24px; }
+#projects .projects-heading h2 { margin-top: 0; }
+#about > .eyebrow { display: none; }
+#about > h2 { margin-top: 0; }
