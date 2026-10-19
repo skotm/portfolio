@@ -209,7 +209,7 @@ export default function App() {
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
-    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}service-worker.js`).catch((error: unknown) => {
+    navigator.serviceWorker.register('/portfolio/service-worker.js').catch((error: unknown) => {
       console.warn('画像キャッシュ用Service Workerを登録できませんでした。', error);
     });
   }, []);
