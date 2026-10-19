@@ -112,7 +112,7 @@ function ReadmeContent({ html, repositoryUrl }: { html: string; repositoryUrl: s
 
   return <div ref={contentRef} className="readme-content" dangerouslySetInnerHTML={{ __html: sanitizeReadmeHtml(html, repositoryUrl) }} />;
 }
-function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void }) {
+function ProjectDetails({ project, headings, setHeadings, setActiveHeading, onBack }: { project: Project; headings: ReadmeHeading[]; setHeadings: (value: ReadmeHeading[]) => void; activeHeading: string; setActiveHeading: (value: string) => void; onBack: () => void }) {
   const [readme, setReadme] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -174,7 +174,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
   return (
     <div className="documentation-page">
       <header className="documentation-header">
-        <button className="documentation-back" type="button" onClick={returnToPreviousPage}>← トップページに戻る</button>
+        <button className="documentation-back" type="button" onClick={onBack}>← トップページに戻る</button>
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -275,7 +275,7 @@ export default function App() {
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} /></main> : <main>
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={returnToPreviousPage} /></main> : <main>
         <section className="hero">
           <div className="profile-cover" aria-hidden="true">
             <img src="/portfolio/sakura.jpg" alt="" fetchPriority="high" />
