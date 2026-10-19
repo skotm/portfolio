@@ -174,7 +174,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
   return (
     <div className="documentation-page">
       <header className="documentation-header">
-        <button className="documentation-back" type="button" onClick={() => window.dispatchEvent(new CustomEvent('portfolio:back-to-home'))}>← トップページに戻る</button>
+        <button className="documentation-back" type="button" onClick={() => window.history.back()}>← トップページに戻る</button>
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -201,14 +201,28 @@ export default function App() {
       const project = projects.find((item) => item.name === name);
       if (project) setSelectedProject(project);
     };
-    const onBackToHome = () => setSelectedProject(null);
+    const onPopState = (event: PopStateEvent) => {
+      const name = (event.state as { portfolioProject?: string } | null)?.portfolioProject;
+      setSelectedProject(projects.find((item) => item.name === name) || null);
+    };
     window.addEventListener('portfolio:select-project', onSelectProject);
-    window.addEventListener('portfolio:back-to-home', onBackToHome);
+    window.addEventListener('popstate', onPopState);
     return () => {
       window.removeEventListener('portfolio:select-project', onSelectProject);
-      window.removeEventListener('portfolio:back-to-home', onBackToHome);
+      window.removeEventListener('popstate', onPopState);
     };
   }, []);
+
+  useEffect(() => {
+    if (!selectedProject) return;
+    const state = window.history.state as { portfolioProject?: string } | null;
+    if (state?.portfolioProject === selectedProject.name) return;
+    window.history.pushState(
+      { portfolioProject: selectedProject.name },
+      '',
+      `#project-${encodeURIComponent(selectedProject.name)}`,
+    );
+  }, [selectedProject]);
 
   return (
     <div className="shell" id="top">
