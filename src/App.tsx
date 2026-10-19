@@ -296,7 +296,7 @@ export default function App() {
 
   return (
     <div className="shell" id="top">
-      <header className="nav">
+      {!showProjectDirectory && <header className="nav">
         <a className="logo" href="#top">skotm</a>
         <nav aria-label="メインナビゲーション">
           <a href="#projects">Projects</a>
@@ -310,7 +310,7 @@ export default function App() {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-7.36L5.6 22H2.46l7.25-8.28L1.8 2h6.4l4.43 6.77L18.9 2Zm-1.1 17.9h1.73L7.27 3.98H5.41L17.8 19.9Z"/></svg>
           </a>
         </div>
-      </header>
+      </header>}
 
       <aside className="site-sidebar" aria-label="サイトサイドバー">
         <a className="sidebar-brand" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm<span>{selectedProject ? 'DOCUMENTATION' : 'PORTFOLIO'}</span></a>
