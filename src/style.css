@@ -2154,3 +2154,7 @@ a, button, .filters button, .down, .about-link {
 #projects .projects-heading h2 { margin-top: 0; }
 #about > .eyebrow { display: none; }
 #about > h2 { margin-top: 0; }
+
+
+/* Compact project archive heading after removing eyebrow and item count */
+.project-directory-header h1 { margin-top: 0; }
