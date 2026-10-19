@@ -174,7 +174,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
   return (
     <div className="documentation-page">
       <header className="documentation-header">
-        <button className="documentation-back" type="button" onClick={() => window.history.back()}>← トップページに戻る</button>
+        <button className="documentation-back" type="button" onClick={returnToPreviousPage}>← トップページに戻る</button>
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -191,19 +191,43 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading }: { 
   );
 }
 
+function projectFromLocation(): Project | null {
+  const name = new URLSearchParams(window.location.search).get('project');
+  return projects.find((project) => project.name === name) || null;
+}
+
 export default function App() {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(() => projectFromLocation());
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
+  const openProject = (project: Project) => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', project.name);
+    window.history.pushState({ portfolioProject: project.name }, '', url);
+    setSelectedProject(project);
+    window.scrollTo(0, 0);
+  };
+
+  const returnToPreviousPage = () => {
+    if (window.history.state?.portfolioProject) {
+      window.history.back();
+      return;
+    }
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    window.history.replaceState({}, '', url);
+    setSelectedProject(null);
+  };
+
   useEffect(() => {
     const onSelectProject = (event: Event) => {
       const name = (event as CustomEvent<string>).detail;
       const project = projects.find((item) => item.name === name);
-      if (project) setSelectedProject(project);
+      if (project) openProject(project);
     };
-    const onPopState = (event: PopStateEvent) => {
-      const name = (event.state as { portfolioProject?: string } | null)?.portfolioProject;
-      setSelectedProject(projects.find((item) => item.name === name) || null);
+    const onPopState = () => {
+      setSelectedProject(projectFromLocation());
+      window.scrollTo(0, 0);
     };
     window.addEventListener('portfolio:select-project', onSelectProject);
     window.addEventListener('popstate', onPopState);
@@ -212,17 +236,6 @@ export default function App() {
       window.removeEventListener('popstate', onPopState);
     };
   }, []);
-
-  useEffect(() => {
-    if (!selectedProject) return;
-    const state = window.history.state as { portfolioProject?: string } | null;
-    if (state?.portfolioProject === selectedProject.name) return;
-    window.history.pushState(
-      { portfolioProject: selectedProject.name },
-      '',
-      `#project-${encodeURIComponent(selectedProject.name)}`,
-    );
-  }, [selectedProject]);
 
   return (
     <div className="shell" id="top">
@@ -251,14 +264,14 @@ export default function App() {
             <a href="#about"><span>03</span> About</a>
           </nav>
           <div className="sidebar-projects"><span className="sidebar-label">PROJECTS</span>
-            {projects.map((project, index) => <a key={project.name} href="#projects" onClick={(event) => { event.preventDefault(); setSelectedProject(project); }}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
+            {projects.map((project, index) => <a key={project.name} href="#projects" onClick={(event) => { event.preventDefault(); openProject(project); }}><span>{String(index + 1).padStart(2, '0')}</span>{project.name}</a>)}
           </div>
         </> : <>
-          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); setSelectedProject(null); }}>← Projects に戻る</a>
+          <a className="sidebar-back" href="#projects" onClick={(event) => { event.preventDefault(); returnToPreviousPage(); }}>← Projects に戻る</a>
           <div className="sidebar-projects"><span className="sidebar-label">README CONTENTS</span>
             {headings.map((heading) => <a key={heading.id} className={activeHeading === heading.id ? 'is-active' : ''} href={'#' + heading.id} onClick={(event) => { event.preventDefault(); document.querySelector('.readme-panel #' + CSS.escape(heading.id))?.scrollIntoView({behavior:'smooth',block:'start'}); setActiveHeading(heading.id); }}><span>{'—'}</span>{heading.text}</a>)}
           </div>
-          <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();setSelectedProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
+          <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();openProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
@@ -308,7 +321,7 @@ export default function App() {
                 </>}
                 <p>{project.description}</p>
                 <div className="project-actions">
-                  <button className="details-button" onClick={() => setSelectedProject(project)}>詳細 <span>↗</span></button>
+                  <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
                   <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
                     <span>GitHub repository</span><span aria-hidden="true">↗</span>
                   </a>
