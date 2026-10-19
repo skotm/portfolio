@@ -206,6 +206,7 @@ export default function App() {
   const [projectCategory, setProjectCategory] = useState('すべて');
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
+  const [pendingHomeSection, setPendingHomeSection] = useState<'top' | 'projects' | 'about' | null>(null);
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
@@ -248,11 +249,26 @@ export default function App() {
     window.history.pushState({}, '', url);
     setSelectedProject(null);
     setShowProjectDirectory(false);
-    window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
-      if (section === 'top') window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      else document.getElementById(section)?.scrollIntoView({ behavior: 'instant', block: 'start' });
-    }));
+    setPendingHomeSection(section);
   };
+
+  useEffect(() => {
+    if (!pendingHomeSection || selectedProject || showProjectDirectory) return;
+    const section = pendingHomeSection;
+    const frame = window.requestAnimationFrame(() => {
+      if (section === 'top') {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      } else {
+        const target = document.getElementById(section);
+        if (target) {
+          const top = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top, left: 0, behavior: 'instant' });
+        }
+      }
+      setPendingHomeSection(null);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [pendingHomeSection, selectedProject, showProjectDirectory]);
 
   useEffect(() => {
     // 戻る・進むで画面が切り替わったとき、ブラウザのスクロール位置復元より先頭表示を優先する。
