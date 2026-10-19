@@ -235,11 +235,11 @@ export default function App() {
   const returnToProjectDirectory = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete('project');
-    url.searchParams.set('view', 'projects');
-    window.history.pushState({ portfolioView: 'projects' }, '', url);
+    url.searchParams.delete('view');
+    window.history.pushState({}, '', url);
     setSelectedProject(null);
-    setShowProjectDirectory(true);
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    setShowProjectDirectory(false);
+    setPendingHomeSection('top');
   };
 
   const navigateToHomeSection = (section: 'top' | 'projects' | 'about') => {
