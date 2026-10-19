@@ -1742,3 +1742,9 @@ a, button, .filters button, .down, .about-link {
   background: #eeece6;
   border-color: #aaa99f;
 }
+
+
+/* Landscape uses the existing sidebar for navigation */
+@media (orientation: landscape) {
+  .documentation-back { display: none !important; }
+}
