@@ -297,10 +297,10 @@ export default function App() {
   return (
     <div className="shell" id="top">
       {!showProjectDirectory && <header className="nav">
-        <a className="logo" href="#top">skotm</a>
+        <a className="logo" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm</a>
         <nav aria-label="メインナビゲーション">
-          <a href="#projects">Projects</a>
-          <a href="#about">About</a>
+          <a href="#projects" onClick={(event) => { event.preventDefault(); navigateToHomeSection('projects'); }}>Projects</a>
+          <a href="#about" onClick={(event) => { event.preventDefault(); navigateToHomeSection('about'); }}>About</a>
         </nav>
         <div className="social-links">
           <a className="gh social-icon" href="https://github.com/skotm" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
