@@ -2164,3 +2164,9 @@ a, button, .filters button, .down, .about-link {
 @media (orientation: landscape) and (max-width: 900px) {
   #projects .projects { grid-auto-columns: minmax(260px, 84%); }
 }
+
+
+/* Landscape home cards should keep the same width as portrait phone cards */
+@media (orientation: landscape) and (max-width: 900px) {
+  #projects .projects { grid-auto-columns: 84% !important; }
+}
