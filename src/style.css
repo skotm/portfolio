@@ -2158,3 +2158,9 @@ a, button, .filters button, .down, .about-link {
 
 /* Compact project archive heading after removing eyebrow and item count */
 .project-directory-header h1 { margin-top: 0; }
+
+
+/* Keep home project cards comfortably wide on phones in landscape orientation */
+@media (orientation: landscape) and (max-width: 900px) {
+  #projects .projects { grid-auto-columns: minmax(260px, 84%); }
+}
