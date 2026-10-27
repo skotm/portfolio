@@ -196,7 +196,7 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading, onBa
         <div className="readme-panel">
           {loading && <p className="readme-state">READMEを読み込み中…</p>}
           {!loading && error && <div className="readme-state"><p>{error}</p>{project.url && <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a>}</div>}
-          {!loading && !error && readme && <ReadmeContent html={readme} repositoryUrl={project.url} />}
+          {!loading && !error && readme && project.url && <ReadmeContent html={readme} repositoryUrl={project.url} />}
         </div>
       </div>
     </div>
