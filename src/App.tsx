@@ -14,6 +14,13 @@ type Project = {
 
 const projects: Project[] = [
   {
+    name: '地震・津波シミュレータ',
+    category: '地震・津波',
+    description: '地震による地盤変動と津波の挙動をシミュレーションするツール',
+    status: '作成中',
+    image: '/portfolio/tunami.jpeg',
+  },
+  {
     name: 'MeteoQuake',
     category: '地震・気象・防災',
     description: '地震・気象・防災情報を扱うアプリ',
@@ -42,13 +49,6 @@ const projects: Project[] = [
     url: 'https://github.com/skotm/wis-viewer',
     owner: 'skotm',
     repo: 'wis-viewer',
-  },
-  {
-    name: '地震・津波シミュレータ',
-    category: '地震・津波',
-    description: '地震による地盤変動と津波の挙動をシミュレーションするツール',
-    status: '構想中',
-    image: '/portfolio/tunami.jpeg',
   },
 ];
 
