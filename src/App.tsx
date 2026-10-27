@@ -465,12 +465,12 @@ export default function App() {
                   <p className="project-category">{project.category}</p>
                 </>}
                 <p>{project.description}</p>
-                <div className="project-actions">
+                {project.url && project.owner && project.repo && <div className="project-actions">
                   <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
                   <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
                     <span>GitHub repository</span><span aria-hidden="true">↗</span>
                   </a>
-                </div>
+                </div>}
               </article>
             ))}
           </div>
