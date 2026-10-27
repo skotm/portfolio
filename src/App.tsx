@@ -17,7 +17,7 @@ const projects: Project[] = [
     name: '地震・津波シミュレータ',
     category: '地震・津波',
     description: '地震による地盤変動と津波の挙動をシミュレーションするツール',
-    status: '作成中',
+    status: '開発中',
     image: '/portfolio/tunami.jpeg',
   },
   {
