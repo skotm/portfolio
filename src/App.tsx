@@ -6,7 +6,7 @@ type Project = {
   description: string;
   status: string;
   image?: string;
-  url: string;
+  url?: string;
   demoUrl?: string;
   owner: string;
   repo: string;
@@ -42,6 +42,13 @@ const projects: Project[] = [
     url: 'https://github.com/skotm/wis-viewer',
     owner: 'skotm',
     repo: 'wis-viewer',
+  },
+  {
+    name: '地震・津波シミュレータ',
+    category: '地震・津波',
+    description: '地震による地盤変動と津波の挙動をシミュレーションするツール',
+    status: '構想中',
+    image: '/portfolio/tunami.jpeg',
   },
 ];
 
@@ -349,30 +356,45 @@ export default function App() {
                   {!project.image && project.status && <span>{project.status}</span>}
                 </div>
                 {project.image && (
-                  <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
-                    <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                    <span className="project-image-shade" aria-hidden="true" />
-                    <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
-                    <span className="project-image-caption">
-                      <span className="project-image-title">{project.name}</span>
-                      <span className="project-image-tags">
-                        <span>{project.category}</span>
-                        {project.status && <span>{project.status}</span>}
+                  project.url ? (
+                    <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
+                      <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                      <span className="project-image-shade" aria-hidden="true" />
+                      <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
+                      <span className="project-image-caption">
+                        <span className="project-image-title">{project.name}</span>
+                        <span className="project-image-tags">
+                          <span>{project.category}</span>
+                          {project.status && <span>{project.status}</span>}
+                        </span>
                       </span>
-                    </span>
-                  </a>
+                    </a>
+                  ) : (
+                    <div className="project-image-link">
+                      <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                      <span className="project-image-shade" aria-hidden="true" />
+                      <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
+                      <span className="project-image-caption">
+                        <span className="project-image-title">{project.name}</span>
+                        <span className="project-image-tags">
+                          <span>{project.category}</span>
+                          {project.status && <span>{project.status}</span>}
+                        </span>
+                      </span>
+                    </div>
+                  )
                 )}
                 {!project.image && <>
                   <h3>{project.name}</h3>
                   <p className="project-category">{project.category}</p>
                 </>}
                 <p>{project.description}</p>
-                <div className="project-actions">
+                {project.url && <div className="project-actions">
                   <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
                   <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
                     <span>GitHub repository</span><span aria-hidden="true">↗</span>
                   </a>
-                </div>
+                </div>}
               </article>
             ))}
           </div>
