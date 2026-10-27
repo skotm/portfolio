@@ -2172,3 +2172,31 @@ a, button, .filters button, .down, .about-link {
 }
 
 
+
+
+/* Home carousel: align the card edges exactly with the project image width */
+#projects .projects > .project {
+  padding: 16px 0 18px !important;
+  overflow: hidden;
+}
+#projects .projects > .project .project-image-link {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+#projects .projects > .project > .project-meta,
+#projects .projects > .project > h3,
+#projects .projects > .project > p,
+#projects .projects > .project > .project-actions {
+  margin-left: 16px;
+  margin-right: 16px;
+}
+@media (max-width: 420px) {
+  #projects .projects > .project > .project-meta,
+  #projects .projects > .project > h3,
+  #projects .projects > .project > p,
+  #projects .projects > .project > .project-actions {
+    margin-left: 13px;
+    margin-right: 13px;
+  }
+}
