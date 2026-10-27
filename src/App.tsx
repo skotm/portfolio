@@ -8,8 +8,8 @@ type Project = {
   image?: string;
   url?: string;
   demoUrl?: string;
-  owner: string;
-  repo: string;
+  owner?: string;
+  repo?: string;
 };
 
 const projects: Project[] = [
@@ -125,13 +125,18 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading, onBa
   const [error, setError] = useState('');
 
   useEffect(() => {
+    if (!project.owner || !project.repo) {
+      setLoading(false);
+      setError('このプロジェクトの詳細ページはまだ用意されていません。');
+      return;
+    }
     const controller = new AbortController();
     setLoading(true);
     setError('');
     setReadme('');
     setHeadings([]);
     setActiveHeading('');
-    fetch(`https://api.github.com/repos/${project.owner}/${project.repo}/readme`, {
+    fetch(`https://api.github.com/repos/${project.owner ?? ''}/${project.repo ?? ''}/readme`, {
       headers: { Accept: 'application/vnd.github.html+json' },
       signal: controller.signal,
     })
@@ -185,12 +190,12 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading, onBa
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
-        <div className="documentation-meta"><span>{project.category}</span>{project.status && <span>{project.status}</span>}<a href={project.url} target="_blank" rel="noreferrer">GitHubで開く ↗</a></div>
+        <div className="documentation-meta"><span>{project.category}</span>{project.status && <span>{project.status}</span>}{project.url && <a href={project.url} target="_blank" rel="noreferrer">GitHubで開く ↗</a>}</div>
       </header>
       <div className="documentation-content">
         <div className="readme-panel">
           {loading && <p className="readme-state">READMEを読み込み中…</p>}
-          {!loading && error && <div className="readme-state"><p>{error}</p><a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a></div>}
+          {!loading && error && <div className="readme-state"><p>{error}</p>{project.url && <a href={project.url + '#readme'} target="_blank" rel="noreferrer">GitHubでREADMEを見る ↗</a>}</div>}
           {!loading && !error && readme && <ReadmeContent html={readme} repositoryUrl={project.url} />}
         </div>
       </div>
