@@ -464,7 +464,6 @@ export default function App() {
               <h2>Projects</h2>
             </div>
             <div className="projects-heading-links">
-              <a className="view-all-projects" href="?view=simulations" onClick={(event) => { event.preventDefault(); openSimulationGallery(); }}>Simulation Gallery <span aria-hidden="true">→</span></a>
               <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
             </div>
           </div>
@@ -518,6 +517,14 @@ export default function App() {
               </article>
             ))}
           </div>
+          <section className="simulation-gallery-promo" aria-labelledby="simulation-gallery-heading">
+            <div>
+              <span className="eyebrow">SIMULATION / RESEARCH</span>
+              <h3 id="simulation-gallery-heading">Simulation Gallery</h3>
+              <p>シミュレーションの記録や計算モデル、結果の検証を記事形式で紹介します。</p>
+            </div>
+            <a className="view-all-projects" href="?view=simulations" onClick={(event) => { event.preventDefault(); openSimulationGallery(); }}>ギャラリーを見る <span aria-hidden="true">→</span></a>
+          </section>
         </section>
 
         <section className="about" id="about">
