@@ -476,6 +476,26 @@ export default function App() {
           </div>
         </section>
 
+        <section className="section simulation-gallery" id="simulations">
+          <div className="heading">
+            <div><h2>Simulation Gallery</h2></div>
+          </div>
+          <p className="simulation-gallery-intro">現象のモデル化や数値計算によるシミュレーション。</p>
+          <div className="simulation-gallery-grid">
+            <article className="simulation-gallery-card">
+              <div className="simulation-gallery-media">
+                <img src="/portfolio/tunami.jpeg" alt="地震・津波シミュレータのイメージ" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+                <span className="simulation-gallery-status">開発中</span>
+              </div>
+              <div className="simulation-gallery-copy">
+                <span className="simulation-gallery-category">EARTHQUAKE / TSUNAMI</span>
+                <h3>地震・津波シミュレータ</h3>
+                <p>地震による地盤変動と津波の挙動を計算する統合シミュレータ。</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
         <section className="about" id="about">
           <span className="eyebrow">ABOUT</span>
           <div className="about-grid">
