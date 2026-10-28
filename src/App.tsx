@@ -212,9 +212,14 @@ function isProjectDirectoryLocation(): boolean {
   return new URLSearchParams(window.location.search).get('view') === 'projects';
 }
 
+function isSimulationGalleryLocation(): boolean {
+  return new URLSearchParams(window.location.search).get('view') === 'simulations';
+}
+
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(() => projectFromLocation());
   const [showProjectDirectory, setShowProjectDirectory] = useState<boolean>(() => isProjectDirectoryLocation());
+  const [showSimulationGallery, setShowSimulationGallery] = useState<boolean>(() => isSimulationGalleryLocation());
   const [projectCategory, setProjectCategory] = useState('すべて');
   const [headings, setHeadings] = useState<ReadmeHeading[]>([]);
   const [activeHeading, setActiveHeading] = useState('');
@@ -234,6 +239,17 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  const openSimulationGallery = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('project');
+    url.searchParams.set('view', 'simulations');
+    window.history.pushState({ portfolioView: 'simulations' }, '', url);
+    setSelectedProject(null);
+    setShowProjectDirectory(false);
+    setShowSimulationGallery(true);
+    window.scrollTo(0, 0);
+  };
+
   const openProjectDirectory = () => {
     const url = new URL(window.location.href);
     url.searchParams.delete('project');
@@ -241,6 +257,7 @@ export default function App() {
     window.history.pushState({ portfolioView: 'projects' }, '', url);
     setSelectedProject(null);
     setShowProjectDirectory(true);
+    setShowSimulationGallery(false);
     window.scrollTo(0, 0);
   };
 
@@ -251,6 +268,7 @@ export default function App() {
     window.history.pushState({}, '', url);
     setSelectedProject(null);
     setShowProjectDirectory(false);
+    setShowSimulationGallery(false);
     setPendingHomeSection('top');
   };
 
@@ -261,11 +279,12 @@ export default function App() {
     window.history.pushState({}, '', url);
     setSelectedProject(null);
     setShowProjectDirectory(false);
+    setShowSimulationGallery(false);
     setPendingHomeSection(section);
   };
 
   useEffect(() => {
-    if (!pendingHomeSection || selectedProject || showProjectDirectory) return;
+    if (!pendingHomeSection || selectedProject || showProjectDirectory || showSimulationGallery) return;
     const section = pendingHomeSection;
     const frame = window.requestAnimationFrame(() => {
       if (section === 'top') {
@@ -280,7 +299,7 @@ export default function App() {
       setPendingHomeSection(null);
     });
     return () => window.cancelAnimationFrame(frame);
-  }, [pendingHomeSection, selectedProject, showProjectDirectory]);
+  }, [pendingHomeSection, selectedProject, showProjectDirectory, showSimulationGallery]);
 
   useEffect(() => {
     // 戻る・進むで画面が切り替わったとき、ブラウザのスクロール位置復元より先頭表示を優先する。
@@ -295,6 +314,7 @@ export default function App() {
     const onPopState = () => {
       setSelectedProject(projectFromLocation());
       setShowProjectDirectory(isProjectDirectoryLocation());
+      setShowSimulationGallery(isSimulationGalleryLocation());
       window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
     };
     window.addEventListener('portfolio:select-project', onSelectProject);
@@ -308,7 +328,7 @@ export default function App() {
 
   return (
     <div className="shell" id="top">
-      {!showProjectDirectory && <header className="nav">
+      {!showProjectDirectory && !showSimulationGallery && <header className="nav">
         <a className="logo" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm</a>
         <nav aria-label="メインナビゲーション">
           <a href="#projects" onClick={(event) => { event.preventDefault(); navigateToHomeSection('projects'); }}>Projects</a>
@@ -344,7 +364,28 @@ export default function App() {
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
       </aside>
-      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={() => navigateToHomeSection('top')} /></main> : showProjectDirectory ? <main id="project-directory">
+      {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={() => navigateToHomeSection('top')} /></main> : showSimulationGallery ? <main id="simulation-gallery-page">
+        <section className="simulation-gallery-page">
+          <header className="project-directory-header">
+            <button className="directory-home-link" type="button" onClick={() => navigateToHomeSection('top')}>← トップページへ戻る</button>
+            <h1>Simulation Gallery</h1>
+            <p>シミュレーションの記録、計算条件、結果や改善過程を記事形式でまとめています。</p>
+          </header>
+          <div className="simulation-post-list">
+            <article className="simulation-post">
+              <a className="simulation-post-image" href="#earthquake-tsunami" onClick={(event) => event.preventDefault()} aria-label="地震・津波シミュレータの記事">
+                <img src="/portfolio/tunami.jpeg" alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
+              </a>
+              <div className="simulation-post-body">
+                <div className="simulation-post-meta"><span>EARTHQUAKE / TSUNAMI</span><span>開発中</span></div>
+                <h2>地震・津波シミュレータ</h2>
+                <p>地震による地盤変動から津波の伝播までを扱う統合シミュレータ。計算モデル、断層条件、数値計算の検証を記録していく予定です。</p>
+                <span className="simulation-post-note">記事は準備中</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main> : showProjectDirectory ? <main id="project-directory">
         <section className="project-directory-page">
           <header className="project-directory-header">
             <h1>All Projects</h1>
@@ -422,7 +463,10 @@ export default function App() {
             <div>
               <h2>Projects</h2>
             </div>
-            <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
+            <div className="projects-heading-links">
+              <a className="view-all-projects" href="?view=simulations" onClick={(event) => { event.preventDefault(); openSimulationGallery(); }}>Simulation Gallery <span aria-hidden="true">→</span></a>
+              <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
+            </div>
           </div>
           <div className="projects">
             {projects.map((project, index) => (
@@ -473,26 +517,6 @@ export default function App() {
                 </div>}
               </article>
             ))}
-          </div>
-        </section>
-
-        <section className="section simulation-gallery" id="simulations">
-          <div className="heading">
-            <div><h2>Simulation Gallery</h2></div>
-          </div>
-          <p className="simulation-gallery-intro">現象のモデル化や数値計算によるシミュレーション。</p>
-          <div className="simulation-gallery-grid">
-            <article className="simulation-gallery-card">
-              <div className="simulation-gallery-media">
-                <img src="/portfolio/tunami.jpeg" alt="地震・津波シミュレータのイメージ" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                <span className="simulation-gallery-status">開発中</span>
-              </div>
-              <div className="simulation-gallery-copy">
-                <span className="simulation-gallery-category">EARTHQUAKE / TSUNAMI</span>
-                <h3>地震・津波シミュレータ</h3>
-                <p>地震による地盤変動と津波の挙動を計算する統合シミュレータ。</p>
-              </div>
-            </article>
           </div>
         </section>
 
