@@ -247,7 +247,8 @@ export default function App() {
     setSelectedProject(null);
     setShowProjectDirectory(false);
     setShowSimulationGallery(true);
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    window.requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' }));
   };
 
   const openProjectDirectory = () => {
