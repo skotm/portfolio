@@ -2174,3 +2174,71 @@ a, button, .filters button, .down, .about-link {
 
 
 
+
+
+/* Simulation Gallery below the Projects section */
+.simulation-gallery {
+  padding-top: clamp(42px, 6vw, 76px);
+}
+.simulation-gallery-intro {
+  max-width: 620px;
+  margin: -8px 0 24px;
+  color: #686868;
+  line-height: 1.75;
+}
+.simulation-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.simulation-gallery-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #e4e4e4;
+  border-radius: 18px;
+  background: #fff;
+}
+.simulation-gallery-media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  background: #f2f2ef;
+}
+.simulation-gallery-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.simulation-gallery-status {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 999px;
+  background: rgba(255,255,255,.9);
+  color: #333;
+  font-size: 11px;
+}
+.simulation-gallery-copy { padding: 18px; }
+.simulation-gallery-category {
+  color: #777;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
+.simulation-gallery-copy h3 {
+  margin: 8px 0;
+  font-size: 20px;
+  letter-spacing: -.03em;
+}
+.simulation-gallery-copy p {
+  margin: 0;
+  color: #686868;
+  line-height: 1.7;
+  font-size: 13px;
+}
+@media (max-width: 700px) {
+  .simulation-gallery-grid { grid-template-columns: minmax(0, 1fr); }
+  .simulation-gallery-copy { padding: 15px; }
+}
