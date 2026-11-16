@@ -1,16 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-
-type Project = {
-  name: string;
-  category: string;
-  description: string;
-  status: string;
-  image?: string;
-  url?: string;
-  demoUrl?: string;
-  owner?: string;
-  repo?: string;
-};
+import GlassButton from './components/GlassButton';
+import GlassNavigation from './components/GlassNavigation';
+import GlassPanel from './components/GlassPanel';
+import LiquidGlassRoot from './components/LiquidGlassRoot';
+import ProjectCard from './components/ProjectCard';
+import type { Project } from './types/project';
 
 const projects: Project[] = [
   {
@@ -185,8 +179,8 @@ function ProjectDetails({ project, headings, setHeadings, setActiveHeading, onBa
 
   return (
     <div className="documentation-page">
-      <header className="documentation-header">
-        <button className="documentation-back" type="button" onClick={onBack}>← トップページに戻る</button>
+      <header className="documentation-header glass-surface">
+        <GlassButton className="documentation-back" onClick={onBack}>← トップページに戻る</GlassButton>
         <span className="eyebrow">DOCUMENTATION</span>
         <h1>{project.name}</h1>
         <p>{project.description}</p>
@@ -327,25 +321,13 @@ export default function App() {
     };
   }, []);
 
-  return (
-    <div className="shell" id="top">
-      {!showProjectDirectory && !showSimulationGallery && <header className="nav">
-        <a className="logo" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm</a>
-        <nav aria-label="メインナビゲーション">
-          <a href="#projects" onClick={(event) => { event.preventDefault(); navigateToHomeSection('projects'); }}>Projects</a>
-          <a href="#about" onClick={(event) => { event.preventDefault(); navigateToHomeSection('about'); }}>About</a>
-        </nav>
-        <div className="social-links">
-          <a className="gh social-icon" href="https://github.com/skotm" target="_blank" rel="noreferrer" aria-label="GitHub" title="GitHub">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.56.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.51-1.3-1.24-1.65-1.24-1.65-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.71 2.62 1.22 3.26.93.1-.73.39-1.22.71-1.5-2.48-.28-5.09-1.24-5.09-5.52 0-1.22.44-2.22 1.16-3-.12-.29-.5-1.42.11-2.96 0 0 .95-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.1-1.45 3.05-1.15 3.05-1.15.61 1.54.23 2.67.11 2.96.72.78 1.16 1.78 1.16 3 0 4.29-2.62 5.23-5.11 5.51.4.35.76 1.03.76 2.08v3.1c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/></svg>
-          </a>
-          <a className="gh social-icon x-icon" href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer" aria-label="X" title="X">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2H22l-6.78 7.75L23.2 22h-6.25l-4.9-7.36L5.6 22H2.46l7.25-8.28L1.8 2h6.4l4.43 6.77L18.9 2Zm-1.1 17.9h1.73L7.27 3.98H5.41L17.8 19.9Z"/></svg>
-          </a>
-        </div>
-      </header>}
+  const viewKey = selectedProject ? `doc:${selectedProject.name}` : showSimulationGallery ? 'simulations' : showProjectDirectory ? 'projects' : 'home';
 
-      <aside className="site-sidebar" aria-label="サイトサイドバー">
+  return (
+    <LiquidGlassRoot className="shell" id="top" targets=".nav, .site-sidebar" resetKey={viewKey}>
+      {!showProjectDirectory && !showSimulationGallery && <GlassNavigation onNavigate={navigateToHomeSection} />}
+
+      <GlassPanel as="aside" className="site-sidebar" aria-label="サイトサイドバー" data-dynamic>
         <a className="sidebar-brand" href="#top" onClick={(event) => { event.preventDefault(); navigateToHomeSection('top'); }}>skotm<span>{selectedProject ? 'DOCUMENTATION' : 'PORTFOLIO'}</span></a>
         {!selectedProject ? <>
           <nav className="sidebar-nav" aria-label="ページ内ナビゲーション">
@@ -364,7 +346,7 @@ export default function App() {
           <div className="sidebar-projects sidebar-other-projects"><span className="sidebar-label">PROJECTS</span>{projects.map((project,index)=><a key={project.name} href="#documentation" onClick={(event)=>{event.preventDefault();openProject(project);}} className={project.name===selectedProject.name?'is-active':''}><span>{String(index+1).padStart(2,'0')}</span>{project.name}</a>)}</div>
         </>}
         <div className="sidebar-socials"><a href="https://github.com/skotm" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://x.com/skotm_0423?s=11" target="_blank" rel="noreferrer">X ↗</a></div>
-      </aside>
+      </GlassPanel>
       {selectedProject ? <main id="documentation"><ProjectDetails key={selectedProject.name} project={selectedProject} headings={headings} setHeadings={setHeadings} activeHeading={activeHeading} setActiveHeading={setActiveHeading} onBack={() => navigateToHomeSection('top')} /></main> : showSimulationGallery ? <main id="simulation-gallery-page">
         <section className="simulation-gallery-page">
           <header className="project-directory-header">
@@ -378,7 +360,7 @@ export default function App() {
                 <img src="/portfolio/tunami.jpeg" alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
               </a>
               <div className="simulation-post-body">
-                <div className="simulation-post-meta"><span>EARTHQUAKE / TSUNAMI</span><span>開発中</span></div>
+                <div className="simulation-post-meta"><span>EARTHQUAKE / TSUNAMI</span><span className="glass-chip">開発中</span></div>
                 <h2>地震・津波シミュレータ</h2>
                 <p>地震による地盤変動から津波の伝播までを扱う統合シミュレータ。計算モデル、断層条件、数値計算の検証を記録していく予定です。</p>
                 <span className="simulation-post-note">記事は準備中</span>
@@ -393,58 +375,13 @@ export default function App() {
             <p>開発したアプリケーション、可視化ツールの一覧。</p>
           </header>
           <div className="project-directory-filters" aria-label="カテゴリで絞り込む">
-            {['すべて', ...Array.from(new Set(projects.map((project) => project.category)))].map((category) => <button key={category} type="button" className={projectCategory === category ? 'is-active' : ''} aria-pressed={projectCategory === category} onClick={() => setProjectCategory(category)}>{category}</button>)}
+            {['すべて', ...Array.from(new Set(projects.map((project) => project.category)))].map((category) => <GlassButton key={category} type="button" className={projectCategory === category ? 'is-active' : ''} aria-pressed={projectCategory === category} onClick={() => setProjectCategory(category)}>{category}</GlassButton>)}
           </div>
-          <div className="project-directory-grid projects">
+          <LiquidGlassRoot className="project-directory-grid projects" targets=".project" resetKey={projectCategory}>
             {projects.filter((project) => projectCategory === 'すべて' || project.category === projectCategory).map((project) => (
-              <article className="project" key={project.name}>
-                <div className="project-meta">
-                  {!project.image && <span>{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>}
-                  {!project.image && project.status && <span>{project.status}</span>}
-                </div>
-                {project.image && (
-                  project.url ? (
-                    <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
-                      <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                      <span className="project-image-shade" aria-hidden="true" />
-                      <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
-                      <span className="project-image-caption">
-                        <span className="project-image-title">{project.name}</span>
-                        <span className="project-image-tags">
-                          <span>{project.category}</span>
-                          {project.status && <span>{project.status}</span>}
-                        </span>
-                      </span>
-                    </a>
-                  ) : (
-                    <div className="project-image-link">
-                      <img className="project-image" src={project.image} alt="" loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                      <span className="project-image-shade" aria-hidden="true" />
-                      <span className="project-image-number">{String(projects.indexOf(project) + 1).padStart(2, '0')}</span>
-                      <span className="project-image-caption">
-                        <span className="project-image-title">{project.name}</span>
-                        <span className="project-image-tags">
-                          <span>{project.category}</span>
-                          {project.status && <span>{project.status}</span>}
-                        </span>
-                      </span>
-                    </div>
-                  )
-                )}
-                {!project.image && <>
-                  <h3>{project.name}</h3>
-                  <p className="project-category">{project.category}</p>
-                </>}
-                <p>{project.description}</p>
-                {project.url && <div className="project-actions">
-                  <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
-                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
-                    <span>GitHub repository</span><span aria-hidden="true">↗</span>
-                  </a>
-                </div>}
-              </article>
+              <ProjectCard key={project.name} project={project} index={projects.indexOf(project)} onOpen={openProject} />
             ))}
-          </div>
+          </LiquidGlassRoot>
           <button className="directory-home-link" type="button" onClick={() => navigateToHomeSection('top')}>← トップページへ戻る</button>
         </section>
       </main> : <main>
@@ -468,56 +405,11 @@ export default function App() {
               <a className="view-all-projects" href="?view=projects" onClick={(event) => { event.preventDefault(); openProjectDirectory(); }}>一覧をみる <span aria-hidden="true">→</span></a>
             </div>
           </div>
-          <div className="projects">
+          <LiquidGlassRoot className="projects" targets=".project" resetKey="home" enabled={false}>
             {projects.map((project, index) => (
-              <article className="project" key={project.name}>
-                <div className="project-meta">
-                  {!project.image && <span>{String(index + 1).padStart(2, '0')}</span>}
-                  {!project.image && project.status && <span>{project.status}</span>}
-                </div>
-                {project.image && (
-                  project.url ? (
-                    <a className="project-image-link" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリを開く'}>
-                      <img className="project-image" src={project.image} alt="" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                      <span className="project-image-shade" aria-hidden="true" />
-                      <span className="project-image-number">{String(index + 1).padStart(2, '0')}</span>
-                      <span className="project-image-caption">
-                        <span className="project-image-title">{project.name}</span>
-                        <span className="project-image-tags">
-                          <span>{project.category}</span>
-                          {project.status && <span>{project.status}</span>}
-                        </span>
-                      </span>
-                    </a>
-                  ) : (
-                    <div className="project-image-link">
-                      <img className="project-image" src={project.image} alt="" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} onError={(event) => { event.currentTarget.style.display = 'none'; }} />
-                      <span className="project-image-shade" aria-hidden="true" />
-                      <span className="project-image-number">{String(index + 1).padStart(2, '0')}</span>
-                      <span className="project-image-caption">
-                        <span className="project-image-title">{project.name}</span>
-                        <span className="project-image-tags">
-                          <span>{project.category}</span>
-                          {project.status && <span>{project.status}</span>}
-                        </span>
-                      </span>
-                    </div>
-                  )
-                )}
-                {!project.image && <>
-                  <h3>{project.name}</h3>
-                  <p className="project-category">{project.category}</p>
-                </>}
-                <p>{project.description}</p>
-                {project.url && project.owner && project.repo && <div className="project-actions">
-                  <button className="details-button" onClick={() => openProject(project)}>詳細 <span>↗</span></button>
-                  <a className="repo-pill" href={project.url} target="_blank" rel="noreferrer" aria-label={project.name + ' のGitHubリポジトリ'}>
-                    <span>GitHub repository</span><span aria-hidden="true">↗</span>
-                  </a>
-                </div>}
-              </article>
+              <ProjectCard key={project.name} project={project} index={index} eager={index === 0} requireRepo onOpen={openProject} />
             ))}
-          </div>
+          </LiquidGlassRoot>
           <section className="simulation-gallery-promo" aria-labelledby="simulation-gallery-heading">
             <div>
               <span className="eyebrow">SIMULATION / RESEARCH</span>
@@ -551,6 +443,6 @@ export default function App() {
       <footer className="site-footer">
         <p>© 2026 skotm. All rights reserved.</p>
       </footer>
-    </div>
+    </LiquidGlassRoot>
   );
 }
