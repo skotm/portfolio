@@ -139,7 +139,17 @@
 }
 
 /* Documentation Header：本文（README）は白背景のまま、ヘッダーだけ薄いガラス */
-.documentation-header.glass-surface { padding: 22px 26px 24px; }
+/* 注意: backdrop-filter は position:fixed の子孫の基準になってしまう。
+   戻るボタン（縦画面で画面左下に固定）がこのヘッダーの子なので、ヘッダーにはぼかしを使わない。 */
+.documentation-header.glass-surface {
+  padding: 22px 26px 24px;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* 縦画面では style.css 側が左右paddingを0にしているため、同じ詳細度で上書きする */
+@media (max-width: 699px), (orientation: portrait) {
+  .shell > main#documentation .documentation-header.glass-surface { padding: 20px 18px 22px; }
+}
 
 /* Simulation Gallery のステータスラベル */
 .glass-chip {
