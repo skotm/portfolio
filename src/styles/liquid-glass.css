@@ -1,0 +1,233 @@
+/* ==========================================================================
+   Liquid Glass — CSSフォールバックとガラス調の共通表現
+   style.css の後に読み込む（main.tsx）。
+   .glass-panel   : WebGLの対象にもなる要素（ライブラリ未使用時はこのCSSで表示）
+   .glass-surface : CSSのみのガラス面（WebGL対象にしない）
+   .glass-button / .glass-chip : CSSのみの小さな操作・ラベル
+   WebGLが描画中の root には [data-glass="ready"] が付く。
+   ========================================================================== */
+:root {
+  --lg-radius: 20px;
+  --lg-ink: #171717;
+  --lg-tint: linear-gradient(135deg, rgba(255, 255, 255, .88), rgba(246, 248, 250, .62));
+  --lg-border: rgba(23, 23, 23, .09);
+  --lg-border-strong: rgba(23, 23, 23, .2);
+  --lg-highlight: rgba(255, 255, 255, .85);
+  --lg-shadow: 0 8px 30px rgba(0, 0, 0, .06);
+  --lg-blur: 14px;
+}
+
+/* ライブラリはガラス要素の先頭子要素として <canvas> を挿入する。
+   flex/gridのレイアウト（カードの高さなど）に影響しないよう、常に絶対配置にしてクリックも遮らない。 */
+:where(.glass-panel) { position: relative; }
+.glass-panel > canvas { position: absolute !important; pointer-events: none !important; }
+
+/* ---- 共通のガラス面 ---- */
+.glass-panel,
+.glass-surface {
+  background: var(--lg-tint);
+  border: 1px solid var(--lg-border);
+  border-radius: var(--lg-radius);
+  box-shadow: var(--lg-shadow), inset 0 1px 0 var(--lg-highlight);
+  -webkit-backdrop-filter: blur(var(--lg-blur));
+  backdrop-filter: blur(var(--lg-blur));
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel, .glass-surface { background: rgba(255, 255, 255, .96); }
+}
+
+/* WebGLが描画中は、二重ぼかしと二重の影を避ける（境界線は残して輪郭を保つ） */
+[data-glass="ready"] > .glass-panel {
+  background: rgba(255, 255, 255, .1);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ---- ヘッダー（インスタンスA） ---- */
+.nav.glass-panel {
+  position: sticky;
+  top: 10px;
+  z-index: 30;
+  height: 60px;
+  margin: 10px 0;
+  padding: 0 22px;
+}
+@media (max-width: 600px) {
+  .nav.glass-panel { top: 8px; height: 52px; margin: 8px 0; padding: 0 14px; }
+}
+
+/* ---- サイドバー（インスタンスA）：横向きでは左に浮かぶガラスパネル ---- */
+@media (orientation: landscape) and (min-width: 700px) {
+  .site-sidebar.glass-panel { top: 12px; bottom: 12px; left: 12px; width: 206px; }
+}
+@media (orientation: landscape) and (min-width: 700px) and (max-width: 900px) {
+  .site-sidebar.glass-panel { top: 10px; bottom: 10px; left: 10px; width: 168px; }
+}
+.site-sidebar .sidebar-nav a:hover,
+.site-sidebar .sidebar-projects a:hover { background: rgba(23, 23, 23, .05); }
+/* 選択状態は面の色だけに頼らず、太字と左のバーでも示す */
+.site-sidebar .sidebar-projects a.is-active {
+  background: rgba(23, 23, 23, .07);
+  box-shadow: inset 3px 0 0 var(--lg-ink);
+  font-weight: 600;
+}
+
+/* ---- Projectsカード（インスタンスB / C） ---- */
+.projects .project.glass-panel {
+  border-radius: var(--lg-radius);
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease;
+}
+.projects .project.glass-panel:hover {
+  background: var(--lg-tint);
+  border-color: var(--lg-border-strong);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .08), inset 0 1px 0 var(--lg-highlight);
+}
+/* WebGLとCSS transformの位置ずれを避けるため、描画中は持ち上げない */
+[data-glass="ready"] > .project.glass-panel:hover { transform: none; box-shadow: none; background: rgba(255, 255, 255, .1); }
+.projects .project .project-image-link { border-radius: calc(var(--lg-radius) - 6px); }
+
+/* ---- ガラス調ボタン（CSSのみ） ---- */
+.glass-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid rgba(23, 23, 23, .14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .58);
+  color: #202020;
+  font: 12px 'DM Sans', 'Noto Sans JP', sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 var(--lg-highlight), 0 1px 2px rgba(0, 0, 0, .04);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition: background .2s ease, border-color .2s ease, color .2s ease, transform .2s ease;
+}
+.glass-button:hover { background: rgba(255, 255, 255, .86); border-color: rgba(23, 23, 23, .3); color: #000; }
+.glass-button:active { transform: scale(.98); }
+.glass-button span:last-child { transition: transform .2s ease; }
+.glass-button:hover span:last-child { transform: translate(2px, -2px); }
+.glass-button--solid,
+.glass-button.details-button {
+  background: rgba(23, 23, 23, .86);
+  border-color: rgba(23, 23, 23, .9);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .22);
+}
+.glass-button--solid:hover,
+.glass-button.details-button:hover { background: rgba(255, 255, 255, .88); color: #171717; border-color: rgba(23, 23, 23, .5); }
+
+/* All Projects のカテゴリ絞り込み：選択中は濃色＋aria-pressed。色だけに頼らず太字にもする */
+.project-directory-filters .glass-button { min-height: 0; padding: 8px 14px; font-size: 13px; color: #444; }
+.project-directory-filters .glass-button:hover { background: rgba(255, 255, 255, .88); border-color: rgba(23, 23, 23, .35); color: #111; }
+.project-directory-filters .glass-button.is-active {
+  background: rgba(23, 23, 23, .88);
+  border-color: rgba(23, 23, 23, .95);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Documentation の戻るボタン */
+.documentation-back.glass-button { min-height: 0; justify-content: flex-start; gap: 8px; padding: 9px 13px; }
+.documentation-back.glass-button:hover { background: rgba(255, 255, 255, .9); border-color: rgba(23, 23, 23, .3); }
+@media (orientation: portrait) {
+  .documentation-back.glass-button { background: rgba(255, 255, 255, .78); border-color: rgba(23, 23, 23, .14); }
+}
+
+/* Documentation Header：本文（README）は白背景のまま、ヘッダーだけ薄いガラス */
+.documentation-header.glass-surface { padding: 22px 26px 24px; }
+
+/* Simulation Gallery のステータスラベル */
+.glass-chip {
+  background: rgba(255, 255, 255, .6);
+  border: 1px solid rgba(23, 23, 23, .12) !important;
+  box-shadow: inset 0 1px 0 var(--lg-highlight);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* ---- アクセシビリティ ---- */
+.glass-button:focus-visible,
+.site-sidebar a:focus-visible,
+.nav a:focus-visible,
+.project a:focus-visible {
+  outline: 2px solid #171717;
+  outline-offset: 2px;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel, .glass-surface, .glass-button, .glass-chip,
+  [data-glass="ready"] > .glass-panel {
+    background: #fff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass-button--solid, .glass-button.details-button, .project-directory-filters .glass-button.is-active { background: #171717; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-panel, .glass-button, .glass-button span:last-child { transition: none !important; }
+  .projects .project.glass-panel:hover, .glass-button:active { transform: none; }
+}
+
+/* ==========================================================================
+   Projectsカードのレイアウト固定
+   画像の高さを「画像の実寸・親の高さ・min-height」に依存させず、常に一定の比率にする。
+   カード幅が狭くても縦長にならず、ボタンもはみ出さないようにする。
+   ========================================================================== */
+.projects .project .project-image-link {
+  position: relative;
+  flex: none;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  container-type: inline-size;
+}
+.projects .project .project-image-link .project-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+/* カード幅に合わせて画像上のタイトルを縮める（単語の途中で折り返さない） */
+.projects .project .project-image-title {
+  font-size: clamp(16px, 7.5cqw, 30px);
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+/* 操作ボタン：狭いカードでは折り返して、はみ出し・重なりを防ぐ */
+#projects .project-actions,
+#project-directory .project-actions,
+.project-actions {
+  flex-wrap: wrap;
+  row-gap: 8px;
+}
+.project-actions .glass-button {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   横画面でも、トップのProjectsカードを縦画面（スマホ）と同じサイズにする
+   縦画面は「幅84%・内側余白16px・gap14px」。横画面では幅が広がり過ぎないよう、
+   同等の固定幅にそろえる。幅は --lg-card-w で調整できる。
+   ========================================================================== */
+:root { --lg-card-w: 288px; }
+@media (orientation: landscape) {
+  #projects .projects {
+    grid-auto-columns: var(--lg-card-w);
+    gap: 14px;
+  }
+  #projects .project { padding: 16px; }
+  #projects .project .project-image-link { margin-bottom: 10px; }
+  #projects .project-actions { gap: 7px; }
+  #projects .project-actions .glass-button {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+}
